@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: eurekaServer #내 애플리케이션 이름
+  config:
+    import: optional:configserver:http://localhost:8888
+
+cloud:
+  config:
+    name: eurekaServer #config server에서 설정 파일을 가져올때 사용하는 이름
