@@ -45,4 +45,4 @@ bin/
 .env
 
 ### application file ###
-application-dev.properties
+application.properties
