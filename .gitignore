@@ -44,5 +44,5 @@ bin/
 ### env ###
 .env
 
-### apps ###
-.apps/
+### application file ###
+application*.properties

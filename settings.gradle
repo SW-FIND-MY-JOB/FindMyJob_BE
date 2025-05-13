@@ -1,2 +1,3 @@
 rootProject.name = 'findMyJob_BE'
 
+include 'apps:configServer'
