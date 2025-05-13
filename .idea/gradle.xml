@@ -11,6 +11,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/apps" />
             <option value="$PROJECT_DIR$/apps/apiGateWay" />
+            <option value="$PROJECT_DIR$/apps/authService" />
             <option value="$PROJECT_DIR$/apps/configServer" />
             <option value="$PROJECT_DIR$/apps/eurekaServer" />
             <option value="$PROJECT_DIR$/libs" />

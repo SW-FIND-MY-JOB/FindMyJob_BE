@@ -5,5 +5,7 @@ include 'apps:configServer'
 include 'apps:eurekaServer'
 include 'apps:apiGateWay'
 
+include 'apps:authService'
+
 //libs
 include 'libs:response-lib'
