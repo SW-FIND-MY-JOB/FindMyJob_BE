@@ -1,5 +1,9 @@
 rootProject.name = 'findMyJob_BE'
 
+//apps
 include 'apps:configServer'
 include 'apps:eurekaServer'
 include 'apps:apiGateWay'
+
+//libs
+include 'libs:response-lib'
