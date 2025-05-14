@@ -1,3 +1,11 @@
+config:
+  health-check: ${health-check}
+
+  jwt-secret: ${jwt-secret}
+
+  redis-host: ${redis-host}
+  redis-port: ${redis-port}
+
 server:
   port: ${server-port}
 
