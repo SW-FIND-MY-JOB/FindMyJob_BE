@@ -17,15 +17,15 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 20)
+    @Column(name = "name", nullable = false, length = 20)
     private String name;
 
-    @Column(nullable = false, length = 30)
+    @Column(name = "email", nullable = false, length = 30)
     private String email;
 
-    @Column(nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(nullable = false)
+    @Column(name = "role", nullable = false)
     private String role;
 }

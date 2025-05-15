@@ -1,4 +1,4 @@
-package com.example.authservice.domain.user.exception.status;
+package com.example.authservice.global.jwt.exception.status;
 
 import com.example.responselib.apiPayload.BaseCode;
 import lombok.AllArgsConstructor;
@@ -7,9 +7,8 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @AllArgsConstructor
-public enum UserSuccessStatus implements BaseCode {
-    _SUCCESS_JOIN(HttpStatus.CREATED, "USER2011", "회원가입 성공"),
-    _SUCCESS_LOGIN(HttpStatus.OK, "USER2001", "로그인 성공");
+public enum ReissueSuccessStatus implements BaseCode {
+    _SUCCESS_CREATE_TOKEN(HttpStatus.CREATED, "MAIL2011", "토큰 재발급 성공");
 
     private final HttpStatus httpStatus;
     private final String code;

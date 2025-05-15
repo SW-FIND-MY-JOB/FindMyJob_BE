@@ -23,7 +23,7 @@ public class MailController {
     public ApiResponse<Null> sendAuthCode(@RequestBody MailReqDTO.MailDTO mailDTO) throws MessagingException {
         mailService.sendMail(mailDTO);
 
-        return ApiResponse.onSuccess();
+        return ApiResponse.of(MailSuccessStatus._SEND_CODE_SUCCESS);
     }
 
     //인증번호 검증
@@ -31,6 +31,6 @@ public class MailController {
     public ApiResponse<Null> verifyAuthCode(@RequestBody MailReqDTO.VerifyCodeDTO verifyCodeDTO){
         mailService.verifyEmailCode(verifyCodeDTO);
 
-        return ApiResponse.onSuccess();
+        return ApiResponse.of(MailSuccessStatus._VERIFY_CODE_SUCCESS);
     }
 }

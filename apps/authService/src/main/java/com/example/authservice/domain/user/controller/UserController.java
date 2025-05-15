@@ -1,6 +1,7 @@
 package com.example.authservice.domain.user.controller;
 
 import com.example.authservice.domain.user.dto.UserReqDTO;
+import com.example.authservice.domain.user.exception.status.UserSuccessStatus;
 import com.example.authservice.domain.user.service.UserService;
 import com.example.responselib.apiPayload.ApiResponse;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,7 +19,7 @@ public class UserController {
     @PostMapping("/join")
     public ApiResponse<Null> join(@RequestBody UserReqDTO.JoinDTO joinDTO){
         userService.join(joinDTO);
-        return ApiResponse.onSuccess();
+        return ApiResponse.of(UserSuccessStatus._SUCCESS_JOIN);
     }
 
     //로그인
@@ -26,6 +27,6 @@ public class UserController {
     public ApiResponse<Null> login(@RequestBody UserReqDTO.LoginDTO loginDTO,
                                              HttpServletResponse response){
         userService.login(loginDTO, response);
-        return ApiResponse.onSuccess();
+        return ApiResponse.of(UserSuccessStatus._SUCCESS_LOGIN);
     }
 }
