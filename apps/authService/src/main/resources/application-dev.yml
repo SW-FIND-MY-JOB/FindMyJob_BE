@@ -6,6 +6,11 @@ config:
   redis-host: ${redis-host}
   redis-port: ${redis-port}
 
+  mail-host: ${mail-host}
+  mail-port: ${mail-port}
+  mail-username: ${mail-username}
+  mail-password: ${mail-password}
+
 server:
   port: ${server-port}
 
@@ -28,7 +33,3 @@ spring:
         hbm2ddl:
           auto: update
         default_batch_fetch_size: 1000
-
-
-
-

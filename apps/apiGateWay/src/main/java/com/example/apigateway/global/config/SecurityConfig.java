@@ -1,4 +1,4 @@
-package com.example.authservice.global.config;
+package com.example.apigateway.global.config;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
@@ -72,14 +72,17 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui/index.html").permitAll() // Swagger 관련 URL 허용
-                        .requestMatchers("/api/login/**", "/").permitAll()
+                        .requestMatchers("/").permitAll()
+
+                        //상태 체크
                         .requestMatchers("/health/**").permitAll()
-                        .requestMatchers("/api/user/deleteUser").authenticated() // 인증 필요
-//                        .requestMatchers("/api/user/deleteUser").hasRole("USER") // 인증 필요
-                        .requestMatchers("/api/user/name").authenticated() // 인증 필요
-                        .requestMatchers("/api/user/**").permitAll()
-                        .requestMatchers("/api/email/**").permitAll() // email 인증 관련 URL 허용
+
+                        //auth
+                        .requestMatchers("/api/login/**").permitAll()
+                        .requestMatchers("/api/mail/**").permitAll()
+                        .requestMatchers("/api/user/set-pw").authenticated() // 인증 필요
                         .requestMatchers("/api/token/reissue").permitAll()
+
                         .anyRequest().authenticated());
 
         return http.build();

@@ -1,0 +1,23 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<body style="margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; background-color: #f4f4f4;">
+<div style="max-width: 600px; margin: 50px auto; background-color: #ffffff; padding: 40px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+
+    <h1 style="color: #333333; text-align: center; margin-bottom: 10px;">안녕하세요!</h1>
+    <h2 style="color: #5A67D8; text-align: center; margin-top: 0;">취업정보 서비스 플랫폼 <strong>내일찾기</strong> 입니다.</h2>
+
+    <p style="text-align: center; color: #555555; font-size: 16px; line-height: 1.6;">
+        아래 인증 코드를 회원가입 창에 입력해주세요.
+    </p>
+
+    <div style="margin: 30px auto; padding: 30px; text-align: center; border: 2px dashed #5A67D8; border-radius: 10px; background-color: #f0f4ff; max-width: 400px;">
+        <h3 style="color: #5A67D8; font-size: 18px; margin-bottom: 10px;">📮 회원가입 인증 코드</h3>
+        <div style="font-size: 32px; font-weight: bold; letter-spacing: 4px; color: #2D3748;" th:text="${code}">123456</div>
+    </div>
+
+    <p style="text-align: center; color: #999999; font-size: 12px; margin-top: 40px;">
+        본 이메일은 회원가입을 위한 인증 요청에 따라 발송되었습니다.
+    </p>
+
+</div>
+</body>
+</html>

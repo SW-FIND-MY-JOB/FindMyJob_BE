@@ -33,8 +33,15 @@ dependencies {
 	implementation 'org.springframework.cloud:spring-cloud-starter-config'
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 
-	//security
-	implementation 'org.springframework.boot:spring-boot-starter-security'
+	//mail
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+	//thymeleaf
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+
+	//bcrypt password
+	implementation 'org.springframework.security:spring-security-crypto'
 
 	//jwt
 	implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
@@ -57,6 +64,7 @@ dependencies {
 	// lombok
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+
 
 	// test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
