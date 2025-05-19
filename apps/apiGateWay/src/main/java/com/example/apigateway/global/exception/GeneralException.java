@@ -1,7 +1,7 @@
 package com.example.apigateway.global.exception;
 
-import com.example.responselib.apiPayload.BaseErrorCode;
-import com.example.responselib.apiPayload.ErrorReasonDTO;
+import com.example.apigateway.global.apiPayLoad.baseCode.BaseErrorCode;
+import com.example.apigateway.global.apiPayLoad.dto.ErrorReasonDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
