@@ -4,7 +4,6 @@ import com.example.authservice.global.jwt.exception.ReissueExceptionHandler;
 import com.example.authservice.global.jwt.exception.status.ReissueErrorStatus;
 import com.example.authservice.global.redis.RedisUtil;
 import com.example.jwtutillib.JwtUtil;
-import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -38,7 +37,7 @@ public class ReissueService {
         //refresh토큰이 만료되었다면 에러처리
         try {
             jwtUtil.isExpired(refresh);
-        } catch (ExpiredJwtException e) {
+        } catch (Exception e) {
             throw new ReissueExceptionHandler(ReissueErrorStatus._EXPIRED_TOKEN);
         }
 
@@ -72,10 +71,10 @@ public class ReissueService {
         }
 
         //redis에 refresh토큰 저장
-        redisUtil.setData("refresh: "+email, refresh, refreshExpiredMs);
+        redisUtil.setData("refresh: "+email, newRefresh, refreshExpiredMs);
 
         //쿠키 생성
-        Cookie cookie = createCookie("refresh", refresh);
+        Cookie cookie = createCookie("refresh", newRefresh);
 
         //응답 헤더에 토큰과 쿠키 삽입
         response.addHeader("Authorization", "Bearer " + access);
