@@ -31,9 +31,17 @@ public class UserReqDTO {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class SetpwDTO{
+    public static class SetPwDTO{
         // 비밀번호 변경시 요청 필드
         String password;
         String newPassword;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class DeleteUserDTO{
+        String password;
     }
 }

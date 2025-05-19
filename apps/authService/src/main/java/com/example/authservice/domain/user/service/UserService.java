@@ -97,11 +97,39 @@ public class UserService {
         }
     }
 
-    public void setPw(UserReqDTO.SetpwDTO setpwDTO){
+    //비번 변경
+    @Transactional
+    public void setPw(UserReqDTO.SetPwDTO setPwDTO, String token){
+        //token 파싱
+        token = token.replace("Bearer ", "");
+
+        User user = userRepository.findById(jwtUtil.getUserId(token))
+                .orElseThrow(() -> new UserExceptionHandler(UserErrorStatus._NOT_EXIST_USER));
+
         //비밀번호 일치 여부
+        if (!bCryptPasswordEncoder.matches(setPwDTO.getPassword(), user.getPassword())){
+            throw new UserExceptionHandler(UserErrorStatus._NOT_EQUAL_PASSWORD);
+        }
 
         //새 비밀번호로 업데이트
+        user.setPassword(bCryptPasswordEncoder.encode(setPwDTO.getNewPassword()));
+        userRepository.save(user);
+    }
 
+    @Transactional
+    public void deleteUser(UserReqDTO.DeleteUserDTO deleteUserDTO, String token){
+        //token 파싱
+        token = token.replace("Bearer ", "");
+
+        User user = userRepository.findById(jwtUtil.getUserId(token))
+                .orElseThrow(() -> new UserExceptionHandler(UserErrorStatus._NOT_EXIST_USER));
+
+        //비밀번호 일치 여부
+        if (!bCryptPasswordEncoder.matches(deleteUserDTO.getPassword(), user.getPassword())){
+            throw new UserExceptionHandler(UserErrorStatus._NOT_EQUAL_PASSWORD);
+        }
+
+        userRepository.delete(user);
     }
 
     private Cookie createCookie(String key, String value) {

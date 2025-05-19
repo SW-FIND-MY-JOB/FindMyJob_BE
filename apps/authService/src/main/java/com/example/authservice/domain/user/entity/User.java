@@ -28,4 +28,9 @@ public class User extends BaseEntity {
 
     @Column(name = "role", nullable = false)
     private String role;
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }
+

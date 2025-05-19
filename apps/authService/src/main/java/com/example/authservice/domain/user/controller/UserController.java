@@ -29,4 +29,20 @@ public class UserController {
         userService.login(loginDTO, response);
         return ApiResponse.of(UserSuccessStatus._SUCCESS_LOGIN);
     }
+
+    //비밀번호 변경
+    @PatchMapping("/pw")
+    public ApiResponse<Null> setPw(@RequestBody UserReqDTO.SetPwDTO setPwDTO,
+                                   @RequestHeader("Authorization") String token){
+        userService.setPw(setPwDTO, token);
+        return ApiResponse.of(UserSuccessStatus._SUCCESS_SET_PASSWORD);
+    }
+
+    //회웜 탈퇴
+    @DeleteMapping("/delete")
+    public ApiResponse<Null> deleteUser(@RequestBody UserReqDTO.DeleteUserDTO deleteUserDTO,
+                                   @RequestHeader("Authorization") String token){
+        userService.deleteUser(deleteUserDTO, token);
+        return ApiResponse.of(UserSuccessStatus._SUCCESS_DELETE_USER);
+    }
 }
