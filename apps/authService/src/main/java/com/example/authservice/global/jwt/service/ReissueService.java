@@ -1,9 +1,9 @@
 package com.example.authservice.global.jwt.service;
 
-import com.example.authservice.global.jwt.JwtUtil;
 import com.example.authservice.global.jwt.exception.ReissueExceptionHandler;
 import com.example.authservice.global.jwt.exception.status.ReissueErrorStatus;
 import com.example.authservice.global.redis.RedisUtil;
+import com.example.jwtutillib.JwtUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -54,6 +54,7 @@ public class ReissueService {
             throw new ReissueExceptionHandler(ReissueErrorStatus._NOT_EXIST_TOKEN);
         }
 
+        Long userId = jwtUtil.getUserId(refresh);
         String email = jwtUtil.getEmail(refresh);
         String name = jwtUtil.getName(refresh);
         String role = jwtUtil.getRole(refresh);
@@ -62,8 +63,8 @@ public class ReissueService {
         Long refreshExpiredMs = 1000*60*60*24L;
 
         //토큰 생성
-        String access = jwtUtil.createJwt("access", email, name, role, accessExpiredMs);
-        String newRefresh = jwtUtil.createJwt("refresh", email, name, role, refreshExpiredMs);
+        String access = jwtUtil.createJwt("access", userId, email, name, role, accessExpiredMs);
+        String newRefresh = jwtUtil.createJwt("refresh", userId, email, name, role, refreshExpiredMs);
 
         //redis에 refresh토큰이 있으면 제거
         if (redisUtil.existData("refresh: "+email)){

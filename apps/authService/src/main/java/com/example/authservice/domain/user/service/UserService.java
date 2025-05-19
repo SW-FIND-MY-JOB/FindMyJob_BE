@@ -5,15 +5,17 @@ import com.example.authservice.domain.user.entity.User;
 import com.example.authservice.domain.user.exception.UserExceptionHandler;
 import com.example.authservice.domain.user.exception.status.UserErrorStatus;
 import com.example.authservice.domain.user.repository.UserRepository;
-import com.example.authservice.global.jwt.JwtUtil;
 import com.example.authservice.global.redis.RedisUtil;
+import com.example.jwtutillib.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -68,8 +70,9 @@ public class UserService {
         Long refreshExpiredMs = 1000*60*60*24L;
 
         //토큰 생성
-        String access = jwtUtil.createJwt("access", user.getEmail(), user.getName(), user.getRole(), accessExpiredMs);
-        String refresh = jwtUtil.createJwt("refresh", user.getEmail(), user.getName(), user.getRole(), refreshExpiredMs);
+        String access = jwtUtil.createJwt("access", user.getId(), user.getEmail(), user.getName(), user.getRole(), accessExpiredMs);
+        log.info("발급된 JWT: {}", access);
+        String refresh = jwtUtil.createJwt("refresh", user.getId(), user.getEmail(), user.getName(), user.getRole(), refreshExpiredMs);
 
         //redis에 refresh토큰이 있으면 제거
         if (redisUtil.existData("refresh: "+email)){
