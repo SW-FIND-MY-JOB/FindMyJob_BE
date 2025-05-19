@@ -9,3 +9,4 @@ include 'apps:authService'
 
 //libs
 include 'libs:response-lib'
+include 'libs:jwt-util-lib'

@@ -1,89 +1,63 @@
 package com.example.apigateway.global.config;
 
-import jakarta.servlet.http.HttpServletRequest;
+import com.example.apigateway.global.jwt.filter.JwtAuthFilter;
+import com.example.apigateway.global.jwt.manager.JwtAuthManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-
-import java.util.Arrays;
-import java.util.Collections;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.server.context.NoOpServerSecurityContextRepository;
+import org.springframework.security.web.server.util.matcher.NegatedServerWebExchangeMatcher;
+import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatcher;
+import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebFluxSecurity
 public class SecurityConfig {
 
-    //AuthenticationManager Bean 등록
+    // 인가설정
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+    public SecurityWebFilterChain securityFilterChain(ServerHttpSecurity http, JwtAuthManager authManager) {
 
-        return configuration.getAuthenticationManager();
-    }
+        //커스텀 필터
+        JwtAuthFilter jwtFilter = new JwtAuthFilter(authManager);
 
-    //암호화를 시켜줌
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
+        //인증 제외 경로 설정
+        ServerWebExchangeMatcher excludeLoginPaths = ServerWebExchangeMatchers.pathMatchers(
+                //auth-service
+                "/auth-service/health/**",
+                "/auth-service/api/user/login",
+                "/auth-service/api/user/join",
+                "/auth-service/api/mail/**",
+                "/auth-service/api/token/reissue"
+        );
+        jwtFilter.setRequiresAuthenticationMatcher(
+                new NegatedServerWebExchangeMatcher(excludeLoginPaths)
+        );
 
+        // 인증 정보 저장  x
+        jwtFilter.setSecurityContextRepository(NoOpServerSecurityContextRepository.getInstance());
 
-    // API 보안 설정 (JWT, OAuth2 등)
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        //cors 설정
         http
-                .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
+                .csrf(csrf -> csrf.disable())
+                .addFilterAt(jwtFilter, SecurityWebFiltersOrder.AUTHENTICATION)
+                .formLogin(form -> form.disable())
+                .httpBasic(basic -> basic.disable())
+                .authorizeExchange(exchange -> exchange
+                        .pathMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui/index.html").permitAll()
 
-                    @Override
-                    public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-
-                        CorsConfiguration configuration = new CorsConfiguration();
-
-                        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:5173"));
-                        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-                        configuration.setAllowCredentials(true);
-                        configuration.setAllowedHeaders(Collections.singletonList("*"));
-                        configuration.setMaxAge(3600L);
-                        configuration.setExposedHeaders(Arrays.asList("Set-Cookie", "Authorization"));
-
-                        return configuration;
-                    }
-                }));
-
-        //csrf disable (jwt방식은 세션을 stateless상태로 관리하기 때문에 csrf에 대한 공격을 방어하지 않아도 된다.)
-        http
-                .csrf((auth) -> auth.disable());
-
-        //From 로그인 방식 disable
-        http
-                .formLogin((auth) -> auth.disable());
-
-        //http basic 인증 방식
-        http
-                .httpBasic((auth) -> auth.disable());
-
-        //인가 작업
-        http
-                .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui/index.html").permitAll() // Swagger 관련 URL 허용
-                        .requestMatchers("/").permitAll()
-
-                        //상태 체크
-                        .requestMatchers("/health/**").permitAll()
-
-                        //auth
-                        .requestMatchers("/api/login/**").permitAll()
-                        .requestMatchers("/api/mail/**").permitAll()
-                        .requestMatchers("/api/user/set-pw").authenticated() // 인증 필요
-                        .requestMatchers("/api/token/reissue").permitAll()
-
-                        .anyRequest().authenticated());
+                        //auth-service 인가설정
+                        .pathMatchers("/auth-service/v3/api-docs/**", "/auth-service/swagger-ui/**", "/auth-service/swagger-ui/index.html").permitAll()
+                        .pathMatchers("/auth-service/health/**").permitAll()
+                        .pathMatchers(HttpMethod.POST, "/auth-service/api/user/login").permitAll()
+                        .pathMatchers(HttpMethod.POST, "/auth-service/api/user/join").permitAll()
+                        .pathMatchers("/auth-service/api/mail/**").permitAll()
+                        .pathMatchers("/auth-service/api/token/reissue").permitAll()
+                        .anyExchange().authenticated()
+                );
 
         return http.build();
     }

@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/apps/configServer" />
             <option value="$PROJECT_DIR$/apps/eurekaServer" />
             <option value="$PROJECT_DIR$/libs" />
+            <option value="$PROJECT_DIR$/libs/jwt-util-lib" />
             <option value="$PROJECT_DIR$/libs/response-lib" />
           </set>
         </option>
