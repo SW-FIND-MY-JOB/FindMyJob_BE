@@ -32,7 +32,7 @@ public class Notice extends BaseEntity {
     private String ncsCdNmLst;
 
     //채용 유형명 (정규직, 비정규직)
-    @Column(name = "hire_type_nm_lst", nullable = false, length = 30)
+    @Column(name = "hire_type_nm_lst", nullable = false, length = 100)
     private String hireTypeNmLst;
 
     //근무지역
