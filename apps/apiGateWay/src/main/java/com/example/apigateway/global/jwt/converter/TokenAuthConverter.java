@@ -1,5 +1,7 @@
 package com.example.apigateway.global.jwt.converter;
 
+import com.example.apigateway.global.apiPayLoad.status.ErrorStatus;
+import com.example.apigateway.global.exception.GeneralException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,6 +23,6 @@ public class TokenAuthConverter implements ServerAuthenticationConverter {
         }
 
         //헤더에 토큰 없음 에러처리
-        return Mono.empty();
+        throw new GeneralException(ErrorStatus._NOT_EXIST_TOKEN);
     }
 }

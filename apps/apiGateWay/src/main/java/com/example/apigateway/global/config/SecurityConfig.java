@@ -32,7 +32,12 @@ public class SecurityConfig {
                 "/auth-service/api/user/login",
                 "/auth-service/api/user/join",
                 "/auth-service/api/mail/**",
-                "/auth-service/api/token/reissue"
+                "/auth-service/api/token/reissue",
+
+                //job-service
+                "/job-service/health/**",
+                "/job-service/api/agency/**",
+                "/job-service/api/notice/**"
         );
         jwtFilter.setRequiresAuthenticationMatcher(
                 new NegatedServerWebExchangeMatcher(excludeLoginPaths)
@@ -56,6 +61,12 @@ public class SecurityConfig {
                         .pathMatchers(HttpMethod.POST, "/auth-service/api/user/join").permitAll()
                         .pathMatchers("/auth-service/api/mail/**").permitAll()
                         .pathMatchers("/auth-service/api/token/reissue").permitAll()
+
+                        //job-service 인가설정
+                        .pathMatchers("/job-service/health/**").permitAll()
+                        .pathMatchers("/job-service/api/agency/**").permitAll()
+                        .pathMatchers("/job-service/api/notice/**").permitAll()
+
                         .anyExchange().authenticated()
                 );
 

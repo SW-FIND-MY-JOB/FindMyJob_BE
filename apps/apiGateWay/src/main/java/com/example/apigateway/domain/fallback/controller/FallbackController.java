@@ -14,4 +14,9 @@ public class FallbackController {
     public ApiResponse<Null> authFallback(){
         return ApiResponse.onFailure(ErrorStatus._SERVICE_UNAVAILABLE, null);
     }
+
+    @RequestMapping("/job")
+    public ApiResponse<Null> jobFallback(){
+        return ApiResponse.onFailure(ErrorStatus._SERVICE_UNAVAILABLE, null);
+    }
 }
