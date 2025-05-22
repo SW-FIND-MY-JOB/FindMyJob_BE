@@ -37,11 +37,11 @@ public class Agency extends BaseEntity {
     private String establishmentAt;
 
     //설립목적
-    @Column(name = "reason")
+    @Column(name = "reason", columnDefinition = "TEXT")
     private String reason;
 
     //역할
-    @Column(name = "role")
+    @Column(name = "role", columnDefinition = "TEXT")
     private String role;
 
     //기관장
