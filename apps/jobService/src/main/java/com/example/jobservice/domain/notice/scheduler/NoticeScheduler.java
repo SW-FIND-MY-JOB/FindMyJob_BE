@@ -60,7 +60,7 @@ public class NoticeScheduler {
         if (redisUtil.existData("noticeRecrutStart")) {
             pbancBgngYmd = redisUtil.getData("noticeRecrutStart");
         } else {
-            pbancBgngYmd = "20250501";
+            pbancBgngYmd = "20250101";
         }
 
         List<Notice> allNotices = new ArrayList<>();
@@ -103,7 +103,7 @@ public class NoticeScheduler {
                                 .recruitSeNm(dto.getRecrutSeNm())
                                 .prefCondCn(dto.getPrefCondCn())
                                 .pbancBgngYmd(LocalDate.parse(dto.getPbancBgngYmd(), formatter))
-                                .pbancEndYmd(LocalDate.parse(dto.getPbancBgngYmd(), formatter))
+                                .pbancEndYmd(LocalDate.parse(dto.getPbancEndYmd(), formatter))
                                 .recrutPbancTtl(dto.getRecrutPbancTtl())
                                 .srcUrl(dto.getSrcUrl())
                                 .aplyQlfcCn(dto.getAplyQlfcCn())
