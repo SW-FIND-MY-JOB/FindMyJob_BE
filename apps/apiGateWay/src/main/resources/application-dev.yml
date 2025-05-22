@@ -31,11 +31,13 @@ spring:
                 name: authCircuitBreaker
                 fallbackUri: forward:/fallback/auth
 
-#management:
-#  endpoint:
-#    gateway:
-#      enabled: true
-#  endpoints:
-#    web:
-#      exposure:
-#        include: gateway
+        - id: job-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/job-service/**
+          filters:
+            - StripPrefix=1
+            - name: CircuitBreaker
+              args:
+                name: jobCircuitBreaker
+                fallbackUri: forward:/fallback/job
