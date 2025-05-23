@@ -4,6 +4,8 @@ import com.example.authservice.domain.user.dto.UserReqDTO;
 import com.example.authservice.domain.user.exception.status.UserSuccessStatus;
 import com.example.authservice.domain.user.service.UserService;
 import com.example.responselib.apiPayload.ApiResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.Null;
 import lombok.RequiredArgsConstructor;
@@ -12,11 +14,13 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/user")
+@Tag(name = "사용자 관련 API입니다", description = "사용자 관련 API입니다")
 public class UserController {
     private final UserService userService;
 
     //회원가입
     @PostMapping("/join")
+    @Operation(summary = "회원가입 하기", description = "회원가입 하기")
     public ApiResponse<Null> join(@RequestBody UserReqDTO.JoinDTO joinDTO){
         userService.join(joinDTO);
         return ApiResponse.of(UserSuccessStatus._SUCCESS_JOIN);
@@ -24,6 +28,7 @@ public class UserController {
 
     //로그인
     @PostMapping("/login")
+    @Operation(summary = "로그인 하기", description = "로그인 하기")
     public ApiResponse<Null> login(@RequestBody UserReqDTO.LoginDTO loginDTO,
                                              HttpServletResponse response){
         userService.login(loginDTO, response);
@@ -32,6 +37,7 @@ public class UserController {
 
     //비밀번호 변경
     @PatchMapping("/pw")
+    @Operation(summary = "비밀번호 변경하기", description = "비밀번호 변경하기")
     public ApiResponse<Null> setPw(@RequestBody UserReqDTO.SetPwDTO setPwDTO,
                                    @RequestHeader("Authorization") String token){
         userService.setPw(setPwDTO, token);
@@ -40,6 +46,7 @@ public class UserController {
 
     //회웜 탈퇴
     @DeleteMapping("/delete")
+    @Operation(summary = "회원 삭제하기", description = "회원 삭제하기")
     public ApiResponse<Null> deleteUser(@RequestBody UserReqDTO.DeleteUserDTO deleteUserDTO,
                                    @RequestHeader("Authorization") String token){
         userService.deleteUser(deleteUserDTO, token);
