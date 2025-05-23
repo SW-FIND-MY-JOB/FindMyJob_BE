@@ -3,10 +3,13 @@ package com.example.jobservice.domain.notice.service;
 import com.example.jobservice.domain.notice.converter.NoticeConverter;
 import com.example.jobservice.domain.notice.dto.notice.NoticeResDTO;
 import com.example.jobservice.domain.notice.entity.Notice;
+import com.example.jobservice.domain.notice.exception.status.NoticeErrorStatus;
 import com.example.jobservice.domain.notice.repository.NoticeRepository;
 import com.example.jobservice.domain.notice.repository.NoticeScrapRepository;
+import com.example.jobservice.global.exception.GeneralException;
 import com.example.jwtutillib.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,7 +28,46 @@ public class NoticeService {
                                       String type, String keyword, int page, int size){
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<Notice> result = noticeRepository.searchNotices(region, category, history, edu, type, keyword, pageable);
-        return result.map(NoticeConverter::toNoticeResDTO);
+        return result.map(dto -> NoticeConverter.toNoticeResDTO(dto, false));
+    }
+
+    //단일 공고 조회
+    @Transactional
+    public NoticeResDTO.NoticeDetailInformDTO searchNotice(HttpServletRequest request, Long noticeId){
+        //사용자 정보 추출
+        String token = request.getHeader("Authorization");
+
+        //사용자 id 초기화
+        Long userId;
+
+        //토큰 검증
+        if (token != null && token.startsWith("Bearer ")){
+            token = token.substring(7);
+
+            if(!jwtUtil.isExpired(token)){
+                userId = jwtUtil.getUserId(token);
+            } else {
+                userId = null;
+            }
+        } else {
+            userId = null;
+        }
+
+        Notice notice = noticeRepository.findById(noticeId)
+                .orElseThrow(() -> new GeneralException(NoticeErrorStatus._NOT_EXIST_NOTICE));
+
+        //조회수 증가
+        notice.setViewCnt(notice.getViewCnt() + 1);
+        noticeRepository.save(notice);
+
+        //로그인 x
+        if (userId == null){
+            return NoticeConverter.toNoticeDetailResDTO(notice, false);
+        }
+
+        //로그인 o 스크랩 했는지 확인
+        boolean isScrap = noticeScrapRepository.existsByNoticeAndUserId(notice, userId);
+        return NoticeConverter.toNoticeDetailResDTO(notice, isScrap);
     }
 
     //최근 공고검색
@@ -55,25 +97,13 @@ public class NoticeService {
 
         // 사용자가 null이라면
         if (userId == null) {
-            return result.map(NoticeConverter::toNoticeResDTO);
+            return result.map(dto -> NoticeConverter.toNoticeResDTO(dto, false));
         }
 
         // 사용자가 null이 아니라면
         return result.map(notice -> {
             boolean isScrap = noticeScrapRepository.existsByNoticeAndUserId(notice, userId);
-
-            return NoticeResDTO.NoticeInformDTO.builder()
-                    .id(notice.getId())
-                    .instNm(notice.getInstNm())
-                    .ncsCdNmLst(notice.getNcsCdNmLst())
-                    .hireTypeNmLst(notice.getHireTypeNmLst())
-                    .workRgnNmLst(notice.getWorkRgnNmLst())
-                    .recruitSeNm(notice.getRecruitSeNm())
-                    .pbancEndYmd(notice.getPbancEndYmd())
-                    .recrutPbancTtl(notice.getRecrutPbancTtl())
-                    .logoUrl(notice.getAgency() != null ? notice.getAgency().getLogoUrl() : null)
-                    .isScarp(isScrap)
-                    .build();
+            return NoticeConverter.toNoticeResDTO(notice, isScrap);
         });
     }
 }

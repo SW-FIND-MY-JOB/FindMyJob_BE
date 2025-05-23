@@ -1,5 +1,7 @@
 package com.example.jobservice.domain.notice.service;
 
+import com.example.jobservice.domain.notice.controller.NoticeController;
+import com.example.jobservice.domain.notice.converter.NoticeConverter;
 import com.example.jobservice.domain.notice.converter.NoticeScrapConverter;
 import com.example.jobservice.domain.notice.dto.notice.NoticeResDTO;
 import com.example.jobservice.domain.notice.entity.Notice;
@@ -80,18 +82,6 @@ public class NoticeScrapService {
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<NoticeScrap> result = noticeScrapRepository.findAllByUserIdOrderByCreatedAtDesc(userId, pageable);
 
-        return result.map(dto->
-                NoticeResDTO.NoticeInformDTO.builder()
-                        .id(dto.getNotice().getId())
-                        .instNm(dto.getNotice().getInstNm())
-                        .ncsCdNmLst(dto.getNotice().getNcsCdNmLst())
-                        .hireTypeNmLst(dto.getNotice().getHireTypeNmLst())
-                        .workRgnNmLst(dto.getNotice().getWorkRgnNmLst())
-                        .recruitSeNm(dto.getNotice().getRecruitSeNm())
-                        .pbancEndYmd(dto.getNotice().getPbancEndYmd())
-                        .recrutPbancTtl(dto.getNotice().getRecrutPbancTtl())
-                        .logoUrl(dto.getNotice().getAgency() != null ? dto.getNotice().getAgency().getLogoUrl() : null)
-                        .isScarp(true)
-                        .build());
+        return result.map(dto-> NoticeConverter.toNoticeResDTO(dto.getNotice(), true));
     }
 }

@@ -2,7 +2,6 @@ package com.example.jobservice.domain.agency.entity;
 
 import com.example.jobservice.domain.common.BaseEntity;
 import com.example.jobservice.domain.notice.entity.Notice;
-import com.example.jobservice.domain.notice.entity.NoticeScrap;
 import jakarta.persistence.*;
 import lombok.*;
 
