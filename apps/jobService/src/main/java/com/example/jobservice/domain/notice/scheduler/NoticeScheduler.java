@@ -2,6 +2,7 @@ package com.example.jobservice.domain.notice.scheduler;
 
 import com.example.jobservice.domain.agency.entity.Agency;
 import com.example.jobservice.domain.agency.repository.AgencyRepository;
+import com.example.jobservice.domain.notice.converter.NoticeConverter;
 import com.example.jobservice.domain.notice.dto.notice.NoticeApiResponseDTO;
 import com.example.jobservice.domain.notice.entity.Notice;
 import com.example.jobservice.domain.notice.repository.NoticeRepository;
@@ -20,6 +21,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -60,7 +62,7 @@ public class NoticeScheduler {
         if (redisUtil.existData("noticeRecrutStart")) {
             pbancBgngYmd = redisUtil.getData("noticeRecrutStart");
         } else {
-            pbancBgngYmd = "20250101";
+            pbancBgngYmd = "20250501";
         }
 
         List<Notice> allNotices = new ArrayList<>();
@@ -77,8 +79,6 @@ public class NoticeScheduler {
                         "&pbancBgngYmd=" + pbancBgngYmd +
                         "&resultType=json");
 
-                log.info("uri: {}", uri);
-
                 response = restTemplate
                         .getForObject(uri, NoticeApiResponseDTO.NoticeApiResponse.class);
             } catch (URISyntaxException e) {
@@ -94,25 +94,7 @@ public class NoticeScheduler {
                         log.info("응답확인 {}", dto.getInstNm());
                         //기관명으로 기관 정보와 매핑 (없다면 null처리)
                         Agency agency = agencyRepository.findByInstNm(dto.getInstNm()).orElse(null);
-                        return Notice.builder()
-                                .id(dto.getRecrutPblntSn())
-                                .instNm(dto.getInstNm())
-                                .ncsCdNmLst(dto.getNcsCdNmLst())
-                                .hireTypeNmLst(dto.getHireTypeNmLst())
-                                .workRgnNmLst(dto.getWorkRgnNmLst())
-                                .recruitSeNm(dto.getRecrutSeNm())
-                                .prefCondCn(dto.getPrefCondCn())
-                                .pbancBgngYmd(LocalDate.parse(dto.getPbancBgngYmd(), formatter))
-                                .pbancEndYmd(LocalDate.parse(dto.getPbancEndYmd(), formatter))
-                                .recrutPbancTtl(dto.getRecrutPbancTtl())
-                                .srcUrl(dto.getSrcUrl())
-                                .aplyQlfcCn(dto.getAplyQlfcCn())
-                                .disqlfcRsn(dto.getDisqlfcRsn())
-                                .scrnprcdrMthdExpln(dto.getScrnprcdrMthdExpln())
-                                .acbgCondNmLst(dto.getAcbgCondNmLst())
-                                .nonatchRsn(dto.getNonatchRsn())
-                                .agency(agency)
-                                .build();
+                        return NoticeConverter.toNotice(dto, agency);
                     })
                     .toList();
 
@@ -128,17 +110,38 @@ public class NoticeScheduler {
             .map(Notice::getId)
             .toList();
 
+        for(Notice notice : allNotices){
+            if (notice.getInstNm() == null) log.error("null - instNm: {}", notice.getId());
+            if (notice.getNcsCdNmLst() == null) log.error("null - ncsCdNmLst: {}", notice.getId());
+            if (notice.getNcsCdLst() == null) log.error("null - ncsCdLst: {}", notice.getId());
+            if (notice.getHireTypeNmLst() == null) log.error("null - hireTypeNmLst: {}", notice.getId());
+            if (notice.getHireTypeLst() == null) log.error("null - hireTypeLst: {}", notice.getId());
+            if (notice.getWorkRgnNmLst() == null) log.error("null - workRgnNmLst: {}", notice.getId());
+            if (notice.getWorkRgnLst() == null) log.error("null - workRgnLst: {}", notice.getId());
+            if (notice.getRecrutSeNm() == null) log.error("null - recrutSeNm: {}", notice.getId());
+            if (notice.getRecrutSe() == null) log.error("null - recrutSe: {}", notice.getId());
+            if (notice.getPbancBgngYmd() == null) log.error("null - pbancBgngYmd: {}", notice.getId());
+            if (notice.getPbancEndYmd() == null) log.error("null - pbancEndYmd: {}", notice.getId());
+            if (notice.getRecrutPbancTtl() == null) log.error("null - recrutPbancTtl: {}", notice.getId());
+            if (notice.getAcbgCondNmLst() == null) log.error("null - acbgCondNmLst: {}", notice.getId());
+            if (notice.getAcbgCondLst() == null) log.error("null - acbgCondLst: {}", notice.getId());
+            if (notice.getAgency() == null) log.error("null - agency: {}", notice.getId());
+        }
+
         //새로운 공고와 null값 필터링
         List<Notice> newNotices = allNotices.stream()
             .filter(notice -> !existingIds.contains(notice.getId()))
             .filter(notice ->
                     notice.getInstNm() != null && notice.getNcsCdNmLst() != null
-                    && notice.getHireTypeNmLst() != null && notice.getWorkRgnNmLst() != null
-                    && notice.getRecruitSeNm() != null && notice.getPbancBgngYmd() != null
+                    && notice.getNcsCdLst() != null && notice.getHireTypeNmLst() != null
+                    && notice.getHireTypeLst() != null && notice.getWorkRgnNmLst() != null
+                    && notice.getWorkRgnLst() != null && notice.getRecrutSeNm() != null
+                    && notice.getRecrutSe() != null && notice.getPbancBgngYmd() != null
                     && notice.getPbancEndYmd() != null && notice.getRecrutPbancTtl() != null
-                    && notice.getAcbgCondNmLst() != null && notice.getAgency() != null)
-            .toList();
-
+                    && notice.getAcbgCondNmLst() != null && notice.getAcbgCondLst() != null
+                    && notice.getAgency() != null)
+//            .toList();
+                .collect(Collectors.toList());
         log.info("새로운 공고 기사 개수 로그: {}", newNotices.size());
 
         noticeRepository.saveAll(newNotices);

@@ -19,14 +19,20 @@ public class NoticeController {
     private final NoticeService noticeService;
 
     //조건 검색으로 정보 가져오기 (페이징 처리)
-    @GetMapping("/inform")
+    @GetMapping("/informs")
     @Operation(summary = "채용 공고 가져오기", description = "조건 검색으로 정보 가져오기 (페이징 처리)")
     public ApiResponse<Page<NoticeResDTO.NoticeInformDTO>> getNoticeInforms(
-            @RequestParam(name = "region", defaultValue = "all") String region,
-            @RequestParam(name = "category", defaultValue = "all") String category,
-            @RequestParam(name = "history", defaultValue = "all") String history,
-            @RequestParam(name = "edu", defaultValue = "all") String edu,
-            @RequestParam(name = "type", defaultValue = "all") String type,
+            //근무지역 코드
+            @RequestParam(name = "regionCD", defaultValue = "all") String region,
+            //직무 코드
+            @RequestParam(name = "categoryCD", defaultValue = "all") String category,
+            //경력 코드
+            @RequestParam(name = "historyCD", defaultValue = "all") String history,
+            //학력 코드
+            @RequestParam(name = "eduCD", defaultValue = "all") String edu,
+            //채용유형(정규직) 코드
+            @RequestParam(name = "typeCD", defaultValue = "all") String type,
+            //키워드
             @RequestParam(name = "keyword", defaultValue = "") String keyword,
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "size", defaultValue = "10") int size){
@@ -34,6 +40,15 @@ public class NoticeController {
         Page<NoticeResDTO.NoticeInformDTO> noticeInformDTOS = noticeService.searchNotices(region, category, history, edu, type, keyword, page, size);
 
         return ApiResponse.of(NoticeSuccessStatus._SUCCESS_GET_NOTICE_INFORM, noticeInformDTOS);
+    }
+
+    //단일 공고 조회하기
+    @GetMapping("/inform")
+    @Operation(summary = "채용 공고 가져오기", description = "단일 공고 정보 가져오기")
+    public ApiResponse<?> getNoticeInform(HttpServletRequest request,
+                                          @RequestParam Long noticeId){
+        NoticeResDTO.NoticeDetailInformDTO noticeDetailInformDTO = noticeService.searchNotice(request, noticeId);
+        return ApiResponse.of(NoticeSuccessStatus._SUCCESS_GET_NOTICE_INFORM, noticeDetailInformDTO);
     }
 
     //최근 올라온 공고 보여주기

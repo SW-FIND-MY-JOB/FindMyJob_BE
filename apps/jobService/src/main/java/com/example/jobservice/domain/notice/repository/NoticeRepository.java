@@ -15,14 +15,12 @@ public interface NoticeRepository extends JpaRepository<Notice, Long> {
     //조건 검색
     @Query("""
         SELECT n FROM Notice n
-        WHERE (:region = 'all' OR n.workRgnNmLst LIKE %:region%)
-          AND (:category = 'all' OR n.ncsCdNmLst LIKE %:category%)
-          AND (:history = 'all' OR n.recruitSeNm LIKE %:history%)
-          AND (:edu = 'all' OR n.acbgCondNmLst LIKE %:edu%)
-          AND (:type = 'all' OR n.hireTypeNmLst LIKE %:type%)
-          AND (:keyword = '' OR 
-                n.recrutPbancTtl LIKE %:keyword% OR 
-                n.instNm LIKE %:keyword%)
+        WHERE (:region = 'all' OR n.workRgnLst LIKE %:region%)
+          AND (:category = 'all' OR n.ncsCdLst LIKE %:category%)
+          AND (:history = 'all' OR n.recrutSe LIKE %:history%)
+          AND (:edu = 'all' OR n.acbgCondLst LIKE %:edu%)
+          AND (:type = 'all' OR n.hireTypeLst LIKE %:type%)
+          AND (:keyword = '' OR n.recrutPbancTtl LIKE %:keyword% OR n.instNm LIKE %:keyword%)
         ORDER BY n.pbancBgngYmd DESC
     """)
     Page<Notice> searchNotices(
