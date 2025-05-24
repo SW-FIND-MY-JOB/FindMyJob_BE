@@ -2,10 +2,7 @@ package com.example.authservice.domain.user.entity;
 
 import com.example.authservice.domain.common.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,14 +20,12 @@ public class User extends BaseEntity {
     @Column(name = "email", nullable = false, length = 30)
     private String email;
 
+    @Setter
     @Column(name = "password", nullable = false)
     private String password;
 
     @Column(name = "role", nullable = false)
     private String role;
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }
 
