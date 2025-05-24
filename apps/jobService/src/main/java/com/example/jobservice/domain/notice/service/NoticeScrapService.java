@@ -1,6 +1,5 @@
 package com.example.jobservice.domain.notice.service;
 
-import com.example.jobservice.domain.notice.controller.NoticeController;
 import com.example.jobservice.domain.notice.converter.NoticeConverter;
 import com.example.jobservice.domain.notice.converter.NoticeScrapConverter;
 import com.example.jobservice.domain.notice.dto.notice.NoticeResDTO;
