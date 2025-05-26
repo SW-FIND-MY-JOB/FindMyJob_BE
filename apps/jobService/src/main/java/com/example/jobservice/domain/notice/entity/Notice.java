@@ -11,7 +11,6 @@ import java.util.List;
 
 
 @Getter
-@Setter
 @Entity
 @Builder
 @NoArgsConstructor
@@ -102,6 +101,7 @@ public class Notice extends BaseEntity {
     private String nonatchRsn;
 
     //조회수
+    @Setter
     @Column(name = "view_cnt")
     private Long viewCnt;
 

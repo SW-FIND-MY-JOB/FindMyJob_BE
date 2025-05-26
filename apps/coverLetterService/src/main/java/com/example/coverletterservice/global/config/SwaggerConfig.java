@@ -1,4 +1,4 @@
-package com.example.jobservice.global.config;
+package com.example.coverletterservice.global.config;
 
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
@@ -13,8 +13,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @OpenAPIDefinition(
         info = @Info(
-                title = "내일찾기 Job-Service API 명세서",
-                description = "Job-Service 테스트를 위한 API 문서입니다.",
+                title = "내일찾기 Cover-Letter-Service API 명세서",
+                description = "Cover-Letter-Service 테스트를 위한 API 문서입니다.",
                 version = "v1",
                 contact = @Contact(
                         name = "내일찾기",
@@ -23,7 +23,7 @@ import org.springframework.context.annotation.Configuration;
         ),
         security = @SecurityRequirement(name = "bearerAuth"),
         servers = {
-                @Server(url = "http://localhost:8082", description = "로컬 서버"),
+                @Server(url = "http://localhost:8083", description = "로컬 서버"),
                 @Server(url = "https://api.도메인주소.com", description = "운영 서버")
         }
 )

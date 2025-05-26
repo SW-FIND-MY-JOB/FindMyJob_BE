@@ -13,11 +13,20 @@
             <option value="$PROJECT_DIR$/apps/apiGateWay" />
             <option value="$PROJECT_DIR$/apps/authService" />
             <option value="$PROJECT_DIR$/apps/configServer" />
+            <option value="$PROJECT_DIR$/apps/coverLetterService" />
             <option value="$PROJECT_DIR$/apps/eurekaServer" />
             <option value="$PROJECT_DIR$/apps/jobService" />
             <option value="$PROJECT_DIR$/libs" />
             <option value="$PROJECT_DIR$/libs/jwt-util-lib" />
             <option value="$PROJECT_DIR$/libs/response-lib" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/apps/exampleService" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/apps/exampleService" />
           </set>
         </option>
       </GradleProjectSettings>

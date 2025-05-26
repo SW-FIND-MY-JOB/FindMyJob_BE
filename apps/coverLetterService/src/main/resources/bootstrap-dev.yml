@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: coverLetterService
+  cloud:
+    config:
+      uri: http://localhost:8888
+      name: coverLetterService

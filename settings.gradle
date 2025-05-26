@@ -7,6 +7,7 @@ include 'apps:apiGateWay'
 
 include 'apps:authService'
 include 'apps:jobService'
+include 'apps:coverLetterService'
 
 //libs
 include 'libs:response-lib'

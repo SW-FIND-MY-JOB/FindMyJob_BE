@@ -13,14 +13,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/notice-scrap")
+@RequestMapping("/api/notice-scraps")
 @RequiredArgsConstructor
 @Tag(name = "채용 공고 스크랩 관련 API입니다", description = "채용 공고 스크랩 관련 API입니다")
 public class NoticeScrapController {
     private final NoticeScrapService noticeScrapService;
 
     //스크랩한 정보 보여주기
-    @GetMapping("/")
+    @GetMapping
     @Operation(summary = "채용 공고 가져오기", description = "스크랩한 정보 보여주기")
     public ApiResponse<Page<NoticeResDTO.NoticeInformDTO>> getScrapNotice(
             HttpServletRequest request,
@@ -33,23 +33,20 @@ public class NoticeScrapController {
 
     //스크랩하기
     //헤더에서 토큰 추출하여 사용자 식별
-    @PostMapping("/")
+    @PostMapping
     @Operation(summary = "스크랩하기", description = "스크랩하기")
     public ApiResponse<Null> scrapNotice(HttpServletRequest request,
                                          @RequestParam Long noticeId) {
         noticeScrapService.saveNoticeScrap(request,noticeId);
-
         return ApiResponse.of(NoticeSuccessStatus._SUCCESS_POST_NOTICE_SCRAP);
     }
 
     //스크랩 해제하기
-    @DeleteMapping("/")
+    @DeleteMapping
     @Operation(summary = "스크랩 해제하기", description = "스크랩 해제하기")
-
     public ApiResponse<Null> deleteScrapNotice(HttpServletRequest request,
                                                @RequestParam Long noticeId) {
         noticeScrapService.deleteNoticeScrap(request,noticeId);
-
         return ApiResponse.of(NoticeSuccessStatus._SUCCESS_DELETE_NOTICE_SCRAP);
     }
 }
