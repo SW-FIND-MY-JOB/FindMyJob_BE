@@ -12,7 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/notice")
+@RequestMapping("/api/notices")
 @RequiredArgsConstructor
 @Tag(name = "채용 공고 관련 API입니다", description = "채용 공고 관련 API입니다")
 public class NoticeController {
@@ -35,7 +35,7 @@ public class NoticeController {
             //키워드
             @RequestParam(name = "keyword", defaultValue = "") String keyword,
             @RequestParam(name = "page", defaultValue = "1") int page,
-            @RequestParam(name = "size", defaultValue = "10") int size){
+            @RequestParam(name = "size", defaultValue = "5") int size){
 
         Page<NoticeResDTO.NoticeInformDTO> noticeInformDTOS = noticeService.searchNotices(region, category, history, edu, type, keyword, page, size);
 

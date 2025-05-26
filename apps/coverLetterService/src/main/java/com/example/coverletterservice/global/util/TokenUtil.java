@@ -1,7 +1,7 @@
-package com.example.jobservice.global.util;
+package com.example.coverletterservice.global.util;
 
-import com.example.jobservice.global.exception.GeneralException;
-import com.example.jobservice.global.exception.status.GlobalErrorStatus;
+import com.example.coverletterservice.global.exception.GeneralException;
+import com.example.coverletterservice.global.exception.status.GlobalErrorStatus;
 import com.example.jwtutillib.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
