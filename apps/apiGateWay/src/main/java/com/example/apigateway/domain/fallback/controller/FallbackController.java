@@ -19,4 +19,9 @@ public class FallbackController {
     public ApiResponse<Null> jobFallback(){
         return ApiResponse.onFailure(ErrorStatus._SERVICE_UNAVAILABLE, null);
     }
+
+    @RequestMapping("/cover-letter")
+    public ApiResponse<Null> coverLetterFallback(){
+        return ApiResponse.onFailure(ErrorStatus._SERVICE_UNAVAILABLE, null);
+    }
 }
