@@ -53,6 +53,9 @@ dependencies {
 	//bootstrap
 	implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
 
+	//retry
+	implementation 'org.springframework.retry:spring-retry'
+
 	// response
 	implementation project(':libs:response-lib')
 

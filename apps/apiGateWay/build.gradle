@@ -33,6 +33,9 @@ dependencies {
 	//bootstrap
 	implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
 
+	//retry
+	implementation 'org.springframework.retry:spring-retry'
+
 	// jwt-util
 	implementation project(':libs:jwt-util-lib')
 
