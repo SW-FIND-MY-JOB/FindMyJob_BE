@@ -18,7 +18,7 @@ jobs:
       #application파일 생성
       - name: 🔧 Generate application.properties for Config Server
         run: |
-          echo -e "${{ secrets.CONFIGSERVER_APP_PROD }}" > apps/configServer/src/main/resources/application.properties
+          echo -e "${{ secrets.CONFIGSERVER_APP_PROD }}" | sed 's/\\n/\\\\n/g' > apps/configServer/src/main/resources/application.properties
 
       # env파일 생성
       - name: Create .env file
