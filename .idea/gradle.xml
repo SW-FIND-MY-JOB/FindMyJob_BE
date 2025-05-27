@@ -22,14 +22,6 @@
           </set>
         </option>
       </GradleProjectSettings>
-      <GradleProjectSettings>
-        <option name="externalProjectPath" value="$PROJECT_DIR$/apps/exampleService" />
-        <option name="modules">
-          <set>
-            <option value="$PROJECT_DIR$/apps/exampleService" />
-          </set>
-        </option>
-      </GradleProjectSettings>
     </option>
   </component>
 </project>

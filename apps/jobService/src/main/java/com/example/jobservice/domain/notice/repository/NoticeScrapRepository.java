@@ -18,4 +18,7 @@ public interface NoticeScrapRepository extends JpaRepository<NoticeScrap, Long> 
 
     //사용자 ID에 맞게 가져오기
     Page<NoticeScrap> findAllByUserIdOrderByCreatedAtDesc(Long userId, Pageable pageable);
+
+    //사용자 ID에 따른 정보 삭제
+    void deleteAllByUserId(Long userId);
 }

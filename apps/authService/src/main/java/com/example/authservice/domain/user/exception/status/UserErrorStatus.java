@@ -16,7 +16,11 @@ public enum UserErrorStatus implements BaseErrorCode {
     _ALREADY_EXIST_EMAIL(HttpStatus.CONFLICT, "USER4091", "이미 사용중인 이메일입니다."),
     _ALREADY_EXIST_PASSWORD(HttpStatus.CONFLICT, "USER4092", "기존 비밀번호와 일치합니다."),
 
-    _NOT_VERIFY_EMAIL(HttpStatus.BAD_REQUEST, "USER4004", "인증되지 않은 메일입니다.");
+    _NOT_VERIFY_EMAIL(HttpStatus.BAD_REQUEST, "USER4004", "인증되지 않은 메일입니다."),
+
+    _NOT_ENOUGH_POINT(HttpStatus.BAD_REQUEST, "USER4005", "포인트가 부족합니다."),
+
+    ;
 
     private final HttpStatus httpStatus;
     private final String code;

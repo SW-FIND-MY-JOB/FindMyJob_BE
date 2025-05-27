@@ -12,12 +12,15 @@ import com.example.jobservice.global.exception.GeneralException;
 import com.example.jobservice.global.util.TokenUtil;
 import com.example.jwtutillib.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class NoticeScrapService {
@@ -27,6 +30,7 @@ public class NoticeScrapService {
     private final JwtUtil jwtUtil;
 
     //공고 스크랩 저장
+    @Transactional
     public void saveNoticeScrap(HttpServletRequest request, Long noticeId) {
         //토큰 검증
         String token = tokenUtil.checkToken(request);
@@ -50,6 +54,7 @@ public class NoticeScrapService {
     }
 
     //공고 스크랩 해제
+    @Transactional
     public void deleteNoticeScrap(HttpServletRequest request, Long noticeId) {
         //토큰 검증
         String token = tokenUtil.checkToken(request);
@@ -67,6 +72,13 @@ public class NoticeScrapService {
 
         //삭제
         noticeScrapRepository.delete(noticeScrap);
+    }
+
+    //사용자 id에 따른 스크랩 내역 삭제
+    @Transactional
+    public void deleteUserNoticeScraps(Long userId){
+        noticeScrapRepository.deleteAllByUserId(userId);
+        log.info("해당 사용자의 공고 스크랩이 삭제되었습니다.");
     }
 
     //스크랩 공고 보여주기

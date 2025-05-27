@@ -1,5 +1,6 @@
 package com.example.coverletterservice.domain.coverLetter.service;
 
+import com.example.coverletterservice.domain.coverLetter.client.AuthServiceClient;
 import com.example.coverletterservice.domain.coverLetter.converter.CoverLetterConverter;
 import com.example.coverletterservice.domain.coverLetter.dto.CoverLetterReqDTO;
 import com.example.coverletterservice.domain.coverLetter.dto.CoverLetterResDTO;
@@ -26,10 +27,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CoverLetterService {
     private final CoverLetterRepository coverLetterRepository;
-    private final CoverLetterScrapService coverLetterScrapService;
     private final TokenUtil tokenUtil;
     private final JwtUtil jwtUtil;
     private final CoverLetterScrapRepository coverLetterScrapRepository;
+    private final AuthServiceClient authServiceClient;
 
     //자소서 저장
     @Transactional
@@ -42,6 +43,9 @@ public class CoverLetterService {
 
         CoverLetter coverLetter = CoverLetterConverter.toCoverLetter(coverLetterInfo, userId);
         coverLetterRepository.save(coverLetter);
+
+        //유저 포인트 적립
+        authServiceClient.addUserPoint(userId, 500);
     }
 
     //단일 자조서 조회

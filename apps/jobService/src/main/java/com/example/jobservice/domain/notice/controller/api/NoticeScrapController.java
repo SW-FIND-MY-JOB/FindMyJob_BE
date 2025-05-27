@@ -1,4 +1,4 @@
-package com.example.jobservice.domain.notice.controller;
+package com.example.jobservice.domain.notice.controller.api;
 
 import com.example.jobservice.domain.notice.dto.notice.NoticeResDTO;
 import com.example.jobservice.domain.notice.exception.status.NoticeSuccessStatus;

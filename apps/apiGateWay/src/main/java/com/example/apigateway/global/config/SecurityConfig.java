@@ -36,6 +36,7 @@ public class SecurityConfig {
                 "/auth-service/health/**",
                 "/auth-service/api/users/login",
                 "/auth-service/api/users/join",
+                "/auth-service/api/users/mail",
                 "/auth-service/api/mail/**",
                 "/auth-service/api/token/reissue",
 
@@ -75,6 +76,7 @@ public class SecurityConfig {
                         .pathMatchers("/auth-service/health/**").permitAll()
                         .pathMatchers(HttpMethod.POST, "/auth-service/api/users/login").permitAll()
                         .pathMatchers(HttpMethod.POST, "/auth-service/api/users/join").permitAll()
+                        .pathMatchers(HttpMethod.GET, "/auth-service/api/users/mail").permitAll()
                         .pathMatchers("/auth-service/api/mail/**").permitAll()
                         .pathMatchers("/auth-service/api/token/reissue").permitAll()
 
