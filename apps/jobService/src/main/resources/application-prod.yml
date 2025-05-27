@@ -1,0 +1,32 @@
+config:
+  health-check: ${health-check}
+
+  jwt-secret: ${jwt-secret}
+
+  redis-host: ${redis-host}
+  redis-port: ${redis-port}
+
+  job-secret: ${job-secret}
+
+server:
+  port: ${server-port}
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${mysql-host}:3306/${mysql-db-name}?serverTimezone=Asia/Seoul
+    username: ${mysql-db-user}
+    password: ${mysql-db-password}
+  sql:
+    init:
+      mode: never
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+        hbm2ddl:
+          auto: update
+        default_batch_fetch_size: 1000

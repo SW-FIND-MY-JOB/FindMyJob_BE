@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: apigateway
+  cloud:
+    config:
+      uri: http://config:8888
+      name: apigateway

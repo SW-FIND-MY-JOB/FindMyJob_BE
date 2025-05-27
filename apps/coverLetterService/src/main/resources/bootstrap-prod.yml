@@ -3,5 +3,5 @@ spring:
     name: cover-letter-service
   cloud:
     config:
-      uri: http://localhost:8888
+      uri: http://config:8888
       name: coverletterservice

@@ -58,8 +58,6 @@ dependencies {
 
 	// jwt-util
 	implementation project(':libs:jwt-util-lib')
-	implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
-	implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
 
 	// db
 	runtimeOnly 'com.mysql:mysql-connector-j'

@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: job-service
+  cloud:
+    config:
+      uri: http://job:8888
+      name: jobservice
