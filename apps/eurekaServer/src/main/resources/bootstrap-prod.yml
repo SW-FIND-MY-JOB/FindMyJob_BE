@@ -1,7 +1,3 @@
 spring:
   application:
     name: eureka-server
-  cloud:
-    config:
-      uri: http://eureka:8888
-      name: eurekaserver

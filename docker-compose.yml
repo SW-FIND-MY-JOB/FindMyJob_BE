@@ -31,9 +31,6 @@ services:
     container_name: eureka
     environment:
       SPRING_PROFILES_ACTIVE: prod
-    depends_on:
-      config:
-        condition: service_started
     ports:
       - "8761:8761"
 

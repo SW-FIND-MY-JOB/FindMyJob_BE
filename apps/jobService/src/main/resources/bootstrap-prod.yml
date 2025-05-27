@@ -3,5 +3,5 @@ spring:
     name: job-service
   cloud:
     config:
-      uri: http://job:8888
+      uri: http://config:8888
       name: jobservice
