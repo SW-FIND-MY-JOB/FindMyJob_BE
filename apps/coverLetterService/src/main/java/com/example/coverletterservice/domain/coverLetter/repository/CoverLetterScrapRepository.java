@@ -18,4 +18,7 @@ public interface CoverLetterScrapRepository extends JpaRepository<CoverLetterScr
 
     //사용자 ID에 맞게 가져오기
     Page<CoverLetterScrap> findAllByUserIdOrderByCreatedAtDesc(Long userId, Pageable pageable);
+
+    //사용자 ID에 관련된 정보 삭제
+    void deleteAllByUserId(Long userId);
 }

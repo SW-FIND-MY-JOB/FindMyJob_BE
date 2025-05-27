@@ -1,4 +1,4 @@
-package com.example.coverletterservice.domain.coverLetter.controller;
+package com.example.coverletterservice.domain.coverLetter.controller.api;
 
 import com.example.coverletterservice.domain.coverLetter.dto.CoverLetterReqDTO;
 import com.example.coverletterservice.domain.coverLetter.dto.CoverLetterResDTO;

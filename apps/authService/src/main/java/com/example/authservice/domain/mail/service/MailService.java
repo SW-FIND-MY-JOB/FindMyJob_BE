@@ -3,6 +3,8 @@ package com.example.authservice.domain.mail.service;
 import com.example.authservice.domain.mail.dto.MailReqDTO;
 import com.example.authservice.domain.mail.exception.MailExceptionHandler;
 import com.example.authservice.domain.mail.exception.status.MailErrorStatus;
+import com.example.authservice.domain.user.exception.UserExceptionHandler;
+import com.example.authservice.domain.user.exception.status.UserErrorStatus;
 import com.example.authservice.domain.user.service.UserService;
 import com.example.authservice.global.redis.RedisUtil;
 import jakarta.mail.MessagingException;
@@ -35,7 +37,9 @@ public class MailService {
         String email = mailDTO.getEmail();
 
         //이미 가입된 메일인지 확인
-        userService.isDuplicatedEmail(email);
+        if(userService.isDuplicatedEmail(email)){
+            throw new UserExceptionHandler(UserErrorStatus._ALREADY_EXIST_EMAIL);
+        };
 
         //인증번호 생성
         String authNum = createCode();

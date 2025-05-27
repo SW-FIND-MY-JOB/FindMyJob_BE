@@ -1,5 +1,6 @@
 package com.example.coverletterservice.domain.coverLetter.service;
 
+import com.example.coverletterservice.domain.coverLetter.client.AuthServiceClient;
 import com.example.coverletterservice.domain.coverLetter.converter.CoverLetterConverter;
 import com.example.coverletterservice.domain.coverLetter.converter.CoverLetterScrapConverter;
 import com.example.coverletterservice.domain.coverLetter.dto.CoverLetterResDTO;
@@ -14,11 +15,13 @@ import com.example.jwtutillib.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CoverLetterScrapService {
@@ -85,5 +88,12 @@ public class CoverLetterScrapService {
                 .orElseThrow(()->new GeneralException(CoverLetterErrorStatus._NOT_EXIST_COVER_LETTER_SCRAP));
 
         coverLetterScrapRepository.delete(coverLetterScrap);
+    }
+
+    //사용자 ID에 관련된 정보 삭제
+    @Transactional
+    public void deleteUserIdCoverLetterScrap(Long userId){
+        coverLetterScrapRepository.deleteAllByUserId(userId);
+        log.info("해당 사용자의 자소서 스크랩이 삭제되었습니다.");
     }
 }
