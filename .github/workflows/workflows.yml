@@ -47,10 +47,10 @@ jobs:
             lowercase_service=$(echo "$service" | tr '[:upper:]' '[:lower:]')
           
             echo "🐳 Building Docker image for $service"
-            docker build -t ${{ secrets.MY_DOCKER_ID }}/lowercase_service:latest ./apps/$service
+            docker build -t ${{ secrets.MY_DOCKER_ID }}/$lowercase_service:latest ./apps/$service
   
             echo "🚀 Pushing Docker image for $service"
-            docker push ${{ secrets.MY_DOCKER_ID }}/lowercase_service:latest
+            docker push ${{ secrets.MY_DOCKER_ID }}/$lowercase_service:latest
           done
 
       - name: 📦 Upload docker-compose.yml and .env to server
