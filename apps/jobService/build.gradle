@@ -54,6 +54,7 @@ dependencies {
 
 	//retry
 	implementation 'org.springframework.retry:spring-retry'
+	implementation 'org.springframework.boot:spring-boot-starter-aop'
 
 	//db
 	runtimeOnly 'com.mysql:mysql-connector-j'
