@@ -3,7 +3,7 @@ spring:
     name: apigateway
   cloud:
     config:
-      uri: http://config:8888
+      uri: http://localhost:8888
       name: apigateway
       retry:
         max-attempts: 10

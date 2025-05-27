@@ -3,7 +3,7 @@ spring:
     name: cover-letter-service
   cloud:
     config:
-      uri: http://config:8888
+      uri: http://localhost:8888
       name: coverletterservice
       retry:
         max-attempts: 10
