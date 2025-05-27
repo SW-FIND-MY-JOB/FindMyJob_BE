@@ -39,12 +39,6 @@ services:
     container_name: config
     ports:
       - "8888:8888"
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:8888/actuator/health" ]
-      interval: 10s
-      timeout: 3s
-      retries: 5
-      start_period: 15s
 
   gateway:
     image: ${MY_DOCKER_ID}/apigateway:latest
@@ -55,7 +49,7 @@ services:
       eureka:
         condition: service_started
       config:
-        condition: service_healthy
+        condition: service_started
     ports:
       - "8000:8000"
 
@@ -72,7 +66,7 @@ services:
       eureka:
         condition: service_started
       config:
-        condition: service_healthy
+        condition: service_started
     ports:
       - "8081:8081"
 
@@ -89,7 +83,7 @@ services:
       eureka:
         condition: service_started
       config:
-        condition: service_healthy
+        condition: service_started
     ports:
       - "8082:8082"
 
@@ -106,7 +100,7 @@ services:
       eureka:
         condition: service_started
       config:
-        condition: service_healthy
+        condition: service_started
     ports:
       - "8083:8083"
 
