@@ -5,3 +5,7 @@ spring:
     config:
       uri: http://config:8888
       name: coverletterservice
+      retry:
+        max-attempts: 10
+        max-interval: 2000
+        initial-interval: 1000
