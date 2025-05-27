@@ -33,7 +33,7 @@ jobs:
 
       # 빌드
       - name: Build All JARs
-        run: ./gradlew :eurekaServer:build :configServer:build :apiGateWay:build :authService:build :jobService:build :coverLetterService:build
+        run: ./gradlew :apps:eurekaServer:build :apps:configServer:build :apps:apiGateWay:build :apps:authService:build :apps:jobService:build :apps:coverLetterService:build
 
       # 도커 로그인
       - name: Log in to Docker Hub
