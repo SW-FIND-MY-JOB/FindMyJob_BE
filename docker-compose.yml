@@ -27,7 +27,7 @@ services:
       retries: 10
 
   eureka:
-    image: ${MY_DOCKER_ID}/eurekaServer:latest
+    image: ${MY_DOCKER_ID}/eurekaserver:latest
     container_name: eureka
     environment:
       SPRING_PROFILES_ACTIVE: prod
@@ -38,13 +38,13 @@ services:
       - "8761:8761"
 
   config:
-    image: ${MY_DOCKER_ID}/configServer:latest
+    image: ${MY_DOCKER_ID}/configserver:latest
     container_name: config
     ports:
       - "8888:8888"
 
   gateway:
-    image: ${MY_DOCKER_ID}/apiGateWay:latest
+    image: ${MY_DOCKER_ID}/apigateway:latest
     container_name: apigateway
     environment:
       SPRING_PROFILES_ACTIVE: prod
@@ -57,7 +57,7 @@ services:
       - "8000:8000"
 
   auth:
-    image: ${MY_DOCKER_ID}/authService:latest
+    image: ${MY_DOCKER_ID}/authservice:latest
     container_name: auth
     environment:
       SPRING_PROFILES_ACTIVE: prod
@@ -74,7 +74,7 @@ services:
       - "8081:8081"
 
   job:
-    image: ${MY_DOCKER_ID}/jobService:latest
+    image: ${MY_DOCKER_ID}/jobservice:latest
     container_name: job
     environment:
       SPRING_PROFILES_ACTIVE: prod
@@ -91,7 +91,7 @@ services:
       - "8082:8082"
 
   cover-letter:
-    image: ${MY_DOCKER_ID}/coverLetterService:latest
+    image: ${MY_DOCKER_ID}/coverletterservice:latest
     container_name: coverletter
     environment:
       SPRING_PROFILES_ACTIVE: prod
