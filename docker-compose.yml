@@ -63,6 +63,11 @@ services:
       - "8080:8080"
     networks:
       - msanet
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator/health" ]
+      interval: 5s
+      timeout: 3s
+      retries: 10
 
   auth:
     image: ${MY_DOCKER_ID}/authservice:latest
@@ -126,7 +131,8 @@ services:
       - ./nginx/conf.d:/etc/nginx/conf.d        # 우리가 만든 default.conf 위치
       - /etc/letsencrypt:/etc/letsencrypt:ro    # 인증서 마운트 (호스트 -> 컨테이너)
     depends_on:
-      - apigateway
+      apigateway:
+        condition: service_healthy
     networks:
       - msanet
 
