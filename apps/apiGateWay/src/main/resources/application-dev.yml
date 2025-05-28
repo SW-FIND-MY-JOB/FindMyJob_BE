@@ -6,6 +6,15 @@ config:
 server:
   port: ${server-port}
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
+
 resilience4j:
   circuitbreaker:
     instances:
