@@ -15,6 +15,8 @@ services:
       test: [ "CMD", "mysqladmin", "ping" ] # MySQL이 healthy 한 지 판단할 수 있는 명령어
       interval: 5s # 5초 간격으로 체크
       retries: 10 # 10번까지 재시도
+    networks:
+      - msanet
 
   redis:
     image: redis:latest
@@ -25,6 +27,8 @@ services:
       test: [ "CMD", "redis-cli", "ping" ]
       interval: 5s
       retries: 10
+    networks:
+      - msanet
 
   eureka:
     image: ${MY_DOCKER_ID}/eurekaserver:latest
@@ -33,12 +37,21 @@ services:
       SPRING_PROFILES_ACTIVE: prod
     ports:
       - "8761:8761"
+    networks:
+      - msanet
 
   config:
     image: ${MY_DOCKER_ID}/configserver:latest
     container_name: config
     ports:
       - "8888:8888"
+    networks:
+      - msanet
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8888/actuator/health" ]
+      interval: 5s
+      timeout: 3s
+      retries: 10
 
   gateway:
     image: ${MY_DOCKER_ID}/apigateway:latest
@@ -47,9 +60,11 @@ services:
       eureka:
         condition: service_started
       config:
-        condition: service_started
+        condition: service_healthy
     ports:
       - "8000:8000"
+    networks:
+      - msanet
 
   auth:
     image: ${MY_DOCKER_ID}/authservice:latest
@@ -67,6 +82,8 @@ services:
         condition: service_started
     ports:
       - "8081:8081"
+    networks:
+      - msanet
 
   job:
     image: ${MY_DOCKER_ID}/jobservice:latest
@@ -84,6 +101,8 @@ services:
         condition: service_started
     ports:
       - "8082:8082"
+    networks:
+      - msanet
 
   cover-letter:
     image: ${MY_DOCKER_ID}/coverletterservice:latest
@@ -101,6 +120,8 @@ services:
         condition: service_started
     ports:
       - "8083:8083"
+    networks:
+      - msanet
 
 volumes:
   mysql-data:
