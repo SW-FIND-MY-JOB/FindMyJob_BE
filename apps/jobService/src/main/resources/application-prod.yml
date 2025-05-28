@@ -9,7 +9,7 @@ config:
   job-secret: ${job-secret}
 
 server:
-  port: ${server.port}
+  port: ${server-port}
 
 spring:
   datasource:

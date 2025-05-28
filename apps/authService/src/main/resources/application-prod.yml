@@ -12,7 +12,7 @@ config:
   mail-password: ${mail-password}
 
 server:
-  port: ${server.port}
+  port: ${server-port}
 
 spring:
   datasource:

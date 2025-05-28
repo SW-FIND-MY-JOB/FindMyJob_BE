@@ -4,7 +4,7 @@ config:
   jwt-secret: ${jwt-secret}
 
 server:
-  port: 8080
+  port: ${server-port}
 
 resilience4j:
   circuitbreaker:
