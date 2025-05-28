@@ -1,0 +1,52 @@
+package com.example.jobservice.domain.notice.controller.api;
+
+import com.example.jobservice.domain.notice.dto.notice.NoticeResDTO;
+import com.example.jobservice.domain.notice.exception.status.NoticeSuccessStatus;
+import com.example.jobservice.domain.notice.service.NoticeScrapService;
+import com.example.responselib.apiPayload.ApiResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.constraints.Null;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/notice-scraps")
+@RequiredArgsConstructor
+@Tag(name = "채용 공고 스크랩 관련 API입니다", description = "채용 공고 스크랩 관련 API입니다")
+public class NoticeScrapController {
+    private final NoticeScrapService noticeScrapService;
+
+    //스크랩한 정보 보여주기
+    @GetMapping
+    @Operation(summary = "채용 공고 가져오기", description = "스크랩한 정보 보여주기")
+    public ApiResponse<Page<NoticeResDTO.NoticeInformDTO>> getScrapNotice(
+            HttpServletRequest request,
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "size", defaultValue = "5") int size) {
+
+        Page<NoticeResDTO.NoticeInformDTO> noticeInformDTOS = noticeScrapService.searchNoticeScrap(request, page, size);
+        return ApiResponse.of(NoticeSuccessStatus._SUCCESS_GET_NOTICE_SCRAP_INFORM, noticeInformDTOS);
+    }
+
+    //스크랩하기
+    //헤더에서 토큰 추출하여 사용자 식별
+    @PostMapping
+    @Operation(summary = "스크랩하기", description = "스크랩하기")
+    public ApiResponse<Null> scrapNotice(HttpServletRequest request,
+                                         @RequestParam Long noticeId) {
+        noticeScrapService.saveNoticeScrap(request,noticeId);
+        return ApiResponse.of(NoticeSuccessStatus._SUCCESS_POST_NOTICE_SCRAP);
+    }
+
+    //스크랩 해제하기
+    @DeleteMapping
+    @Operation(summary = "스크랩 해제하기", description = "스크랩 해제하기")
+    public ApiResponse<Null> deleteScrapNotice(HttpServletRequest request,
+                                               @RequestParam Long noticeId) {
+        noticeScrapService.deleteNoticeScrap(request,noticeId);
+        return ApiResponse.of(NoticeSuccessStatus._SUCCESS_DELETE_NOTICE_SCRAP);
+    }
+}

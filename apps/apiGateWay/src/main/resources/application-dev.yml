@@ -1,0 +1,54 @@
+config:
+  health-check: ${health-check}
+
+  jwt-secret: ${jwt-secret}
+
+server:
+  port: ${server-port}
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      authCircuitBreaker:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 3
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: auth-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=/auth-service/**
+          filters:
+            - StripPrefix=1
+            - name: CircuitBreaker
+              args:
+                name: authCircuitBreaker
+                fallbackUri: forward:/fallback/auth
+
+        - id: job-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/job-service/**
+          filters:
+            - StripPrefix=1
+            - name: CircuitBreaker
+              args:
+                name: jobCircuitBreaker
+                fallbackUri: forward:/fallback/job
+
+        - id: cover-letter-service
+          uri: http://localhost:8083
+          predicates:
+            - Path=/cover-letter-service/**
+          filters:
+            - StripPrefix=1
+            - name: CircuitBreaker
+              args:
+                name: coverLetterCircuitBreaker
+                fallbackUri: forward:/fallback/cover-letter
