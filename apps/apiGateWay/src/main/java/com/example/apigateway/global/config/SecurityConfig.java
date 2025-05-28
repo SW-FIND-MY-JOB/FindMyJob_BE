@@ -34,6 +34,7 @@ public class SecurityConfig {
         matchers.add(ServerWebExchangeMatchers.pathMatchers(
                 //api-gate-way
                 "/health/**",
+                "/actuator/**",
 
                 //auth-service
                 "/auth-service/v3/api-docs/**",
@@ -80,6 +81,8 @@ public class SecurityConfig {
                 .authorizeExchange(exchange -> exchange
                         //api-gate-way 인가설정
                         .pathMatchers(HttpMethod.GET, "/health/**").permitAll()
+                        .pathMatchers(HttpMethod.GET, "/actuator/**").permitAll()
+
 
                         //auth-service 인가설정
                         .pathMatchers("/auth-service/v3/api-docs/**", "/auth-service/swagger-ui/**").permitAll()
