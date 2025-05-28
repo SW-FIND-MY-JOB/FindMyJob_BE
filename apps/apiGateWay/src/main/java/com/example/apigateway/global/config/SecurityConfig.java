@@ -98,6 +98,7 @@ public class SecurityConfig {
 
                         //cover-letter-service 인가설정
                         .pathMatchers("/cover-letter-service/v3/api-docs/**", "/cover-letter-service/swagger-ui/**").permitAll()
+                        .pathMatchers("/cover-letter-service/health/**").permitAll()
                         .pathMatchers(HttpMethod.GET, "/cover-letter-service/api/cover-letters/**").permitAll()
 
                         .anyExchange().authenticated()
