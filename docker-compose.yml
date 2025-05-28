@@ -36,7 +36,7 @@ services:
 
   config:
     image: ${MY_DOCKER_ID}/configserver:latest
-    container_name: config
+    container_name: config-container
     ports:
       - "8888:8888"
 
