@@ -125,3 +125,7 @@ services:
 
 volumes:
   mysql-data:
+
+networks:
+  msanet:
+    driver: bridge
