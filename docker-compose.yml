@@ -33,8 +33,6 @@ services:
   eureka:
     image: ${MY_DOCKER_ID}/eurekaserver:latest
     container_name: eureka
-    environment:
-      SPRING_PROFILES_ACTIVE: prod
     ports:
       - "8761:8761"
     networks:
@@ -62,15 +60,13 @@ services:
       config:
         condition: service_healthy
     ports:
-      - "8000:8000"
+      - "8080:8080"
     networks:
       - msanet
 
   auth:
     image: ${MY_DOCKER_ID}/authservice:latest
     container_name: auth
-    environment:
-      SPRING_PROFILES_ACTIVE: prod
     depends_on:
       mysql:
         condition: service_healthy
@@ -79,7 +75,7 @@ services:
       eureka:
         condition: service_started
       config:
-        condition: service_started
+        condition: service_healthy
     ports:
       - "8081:8081"
     networks:
@@ -88,8 +84,6 @@ services:
   job:
     image: ${MY_DOCKER_ID}/jobservice:latest
     container_name: job
-    environment:
-      SPRING_PROFILES_ACTIVE: prod
     depends_on:
       mysql:
         condition: service_healthy
@@ -98,7 +92,7 @@ services:
       eureka:
         condition: service_started
       config:
-        condition: service_started
+        condition: service_healthy
     ports:
       - "8082:8082"
     networks:
@@ -107,8 +101,6 @@ services:
   cover-letter:
     image: ${MY_DOCKER_ID}/coverletterservice:latest
     container_name: coverletter
-    environment:
-      SPRING_PROFILES_ACTIVE: prod
     depends_on:
       mysql:
         condition: service_healthy
@@ -117,7 +109,7 @@ services:
       eureka:
         condition: service_started
       config:
-        condition: service_started
+        condition: service_healthy
     ports:
       - "8083:8083"
     networks:

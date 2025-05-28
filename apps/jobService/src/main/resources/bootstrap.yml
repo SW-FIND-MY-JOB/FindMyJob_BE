@@ -1,6 +1,8 @@
 spring:
   application:
     name: job-service
+  profiles:
+    active: prod
   cloud:
     config:
       uri: http://config:8888
@@ -9,3 +11,5 @@ spring:
         max-attempts: 10
         max-interval: 10000
         initial-interval: 1000
+      request-connect-timeout: 10000  # milliseconds
+      request-read-timeout: 10000
