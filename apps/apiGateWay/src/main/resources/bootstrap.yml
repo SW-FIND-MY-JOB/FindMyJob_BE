@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: apigateway
+  profiles:
+    active: prod
+  cloud:
+    config:
+      uri: http://config:8888
+      name: apigateway
+      retry:
+        max-attempts: 10
+        max-interval: 10000
+        initial-interval: 1000
+      request-connect-timeout: 10000  # milliseconds
+      request-read-timeout: 10000

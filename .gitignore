@@ -46,3 +46,4 @@ bin/
 
 ### application file ###
 application.properties
+application.yml
