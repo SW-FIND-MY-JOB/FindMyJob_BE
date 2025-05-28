@@ -32,6 +32,9 @@ public class SecurityConfig {
         List<ServerWebExchangeMatcher> matchers = new ArrayList<>();
 
         matchers.add(ServerWebExchangeMatchers.pathMatchers(
+                //api-gate-way
+                "/health/**",
+
                 //auth-service
                 "/auth-service/health/**",
                 "/auth-service/api/users/login",
@@ -69,7 +72,9 @@ public class SecurityConfig {
                 .formLogin(form -> form.disable())
                 .httpBasic(basic -> basic.disable())
                 .authorizeExchange(exchange -> exchange
+                        //api-gate-way 인가설정
                         .pathMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui/index.html").permitAll()
+                        .pathMatchers(HttpMethod.GET, "/health/**").permitAll()
 
                         //auth-service 인가설정
                         .pathMatchers("/auth-service/v3/api-docs/**", "/auth-service/swagger-ui/**", "/auth-service/swagger-ui/index.html").permitAll()
