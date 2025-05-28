@@ -36,6 +36,8 @@ public class SecurityConfig {
                 "/health/**",
 
                 //auth-service
+                "/auth-service/v3/api-docs/**",
+                "/auth-service/swagger-ui/**",
                 "/auth-service/health/**",
                 "/auth-service/api/users/login",
                 "/auth-service/api/users/join",
@@ -44,11 +46,15 @@ public class SecurityConfig {
                 "/auth-service/api/token/reissue",
 
                 //job-service
+                "/job-service/v3/api-docs/**",
+                "/job-service/swagger-ui/**",
                 "/job-service/health/**",
                 "/job-service/api/agency/**",
                 "/job-service/api/notice/**",
 
                 //cover-letter-service
+                "/job-service/v3/api-docs/**",
+                "/job-service/swagger-ui/**",
                 "/cover-letter-service/health/**"
         ));
 
@@ -73,11 +79,10 @@ public class SecurityConfig {
                 .httpBasic(basic -> basic.disable())
                 .authorizeExchange(exchange -> exchange
                         //api-gate-way 인가설정
-                        .pathMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui/index.html").permitAll()
                         .pathMatchers(HttpMethod.GET, "/health/**").permitAll()
 
                         //auth-service 인가설정
-                        .pathMatchers("/auth-service/v3/api-docs/**", "/auth-service/swagger-ui/**", "/auth-service/swagger-ui/index.html").permitAll()
+                        .pathMatchers("/auth-service/v3/api-docs/**", "/auth-service/swagger-ui/**").permitAll()
                         .pathMatchers("/auth-service/health/**").permitAll()
                         .pathMatchers(HttpMethod.POST, "/auth-service/api/users/login").permitAll()
                         .pathMatchers(HttpMethod.POST, "/auth-service/api/users/join").permitAll()
@@ -86,11 +91,13 @@ public class SecurityConfig {
                         .pathMatchers("/auth-service/api/token/reissue").permitAll()
 
                         //job-service 인가설정
+                        .pathMatchers("/job-service/v3/api-docs/**", "/job-service/swagger-ui/**").permitAll()
                         .pathMatchers("/job-service/health/**").permitAll()
                         .pathMatchers("/job-service/api/agency/**").permitAll()
                         .pathMatchers("/job-service/api/notice/**").permitAll()
 
                         //cover-letter-service 인가설정
+                        .pathMatchers("/cover-letter-service/v3/api-docs/**", "/cover-letter-service/swagger-ui/**").permitAll()
                         .pathMatchers(HttpMethod.GET, "/cover-letter-service/api/cover-letters/**").permitAll()
 
                         .anyExchange().authenticated()
