@@ -43,8 +43,6 @@ services:
   gateway:
     image: ${MY_DOCKER_ID}/apigateway:latest
     container_name: apigateway
-    environment:
-      SPRING_PROFILES_ACTIVE: prod
     depends_on:
       eureka:
         condition: service_started

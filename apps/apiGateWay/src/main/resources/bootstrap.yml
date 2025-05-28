@@ -1,6 +1,8 @@
 spring:
   application:
     name: apigateway
+  profiles:
+    active: prod
   cloud:
     config:
       uri: http://config:8888
