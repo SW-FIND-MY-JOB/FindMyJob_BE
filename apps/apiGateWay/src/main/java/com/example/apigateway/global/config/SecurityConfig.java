@@ -63,6 +63,7 @@ public class SecurityConfig {
                 //cover-letter-service
                 HttpMethod.GET, "/cover-letter-service/api/cover-letters/**"
         ));
+        matchers.add(ServerWebExchangeMatchers.pathMatchers(HttpMethod.OPTIONS, "/**"));
 
         ServerWebExchangeMatcher excludeLoginPaths = new OrServerWebExchangeMatcher(matchers);
 
@@ -80,9 +81,9 @@ public class SecurityConfig {
                 .httpBasic(basic -> basic.disable())
                 .authorizeExchange(exchange -> exchange
                         //api-gate-way 인가설정
+                        .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .pathMatchers(HttpMethod.GET, "/health/**").permitAll()
                         .pathMatchers(HttpMethod.GET, "/actuator/**").permitAll()
-
 
                         //auth-service 인가설정
                         .pathMatchers("/auth-service/v3/api-docs/**", "/auth-service/swagger-ui/**").permitAll()
