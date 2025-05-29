@@ -1,6 +1,7 @@
 package com.example.authservice.domain.user.controller.api;
 
 import com.example.authservice.domain.user.dto.UserReqDTO;
+import com.example.authservice.domain.user.dto.UserResDTO;
 import com.example.authservice.domain.user.exception.status.UserSuccessStatus;
 import com.example.authservice.domain.user.service.UserService;
 import com.example.responselib.apiPayload.ApiResponse;
@@ -53,8 +54,18 @@ public class UserController {
     @PostMapping("/logout")
     @Operation(summary = "로그아웃 하기", description = "로그아웃 하기")
     public ApiResponse<Null> logout(HttpServletRequest request, HttpServletResponse response){
+        userService.logout(request, response);
 
-        return ApiResponse.of(null);
+        return ApiResponse.of(UserSuccessStatus._SUCCESS_LOGOUT);
+    }
+
+    //사용자 정보 반환
+    @GetMapping("/inform")
+    @Operation(summary = "사용자 정보 가져오기", description = "사용자 정보 가져오기")
+    public ApiResponse<UserResDTO.userInformDTO> getUserInform(HttpServletRequest request){
+        UserResDTO.userInformDTO userInformDTO = userService.getUserInform(request);
+
+        return ApiResponse.of(UserSuccessStatus._SUCCESS_GET_USER_INFORM, userInformDTO);
     }
 
     //비밀번호 변경
