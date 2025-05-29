@@ -45,12 +45,12 @@ public class MailService {
         String authNum = createCode();
 
         //redis에 인증코드가 있으면 삭제
-        if(redisUtil.existData("code: " + email)){
-            redisUtil.deleteData("code: " + email);
+        if(redisUtil.existData("code:" + email)){
+            redisUtil.deleteData("code:" + email);
         }
 
         //redis에 인증코드 저장 (30분)
-        redisUtil.setData("code: " + email, authNum, 60 * 30L);
+        redisUtil.setData("code:" + email, authNum, 60 * 30L);
 
         //메일 양식 만들기
         try {
@@ -88,7 +88,7 @@ public class MailService {
         String email = verifyCodeDto.getEmail();
         String code = verifyCodeDto.getCode();
 
-        String codeFoundByEmail = redisUtil.getData("code: " + email);
+        String codeFoundByEmail = redisUtil.getData("code:" + email);
 
         //redis에 코드가 있는지 확인
         if (codeFoundByEmail == null) {
@@ -101,9 +101,9 @@ public class MailService {
         }
 
         // 서버에 인증된 메일 저장
-        if (redisUtil.existData("verify: " + email)){
-            redisUtil.deleteData("verify: " + email);
+        if (redisUtil.existData("verify:" + email)){
+            redisUtil.deleteData("verify:" + email);
         }
-        redisUtil.setData("verify: " + email, "true", 60 * 10);
+        redisUtil.setData("verify:" + email, "true", 60 * 10);
     }
 }
