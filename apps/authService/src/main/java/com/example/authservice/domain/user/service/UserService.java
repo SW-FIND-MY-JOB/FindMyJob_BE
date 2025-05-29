@@ -4,12 +4,14 @@ import com.example.authservice.domain.user.client.CoverLetterServiceClient;
 import com.example.authservice.domain.user.client.JobServiceClient;
 import com.example.authservice.domain.user.converter.UserConverter;
 import com.example.authservice.domain.user.dto.UserReqDTO;
+import com.example.authservice.domain.user.dto.UserResDTO;
 import com.example.authservice.domain.user.entity.User;
 import com.example.authservice.domain.user.exception.UserExceptionHandler;
 import com.example.authservice.domain.user.exception.status.UserErrorStatus;
 import com.example.authservice.domain.user.repository.UserRepository;
 import com.example.authservice.global.exception.GeneralException;
 import com.example.authservice.global.redis.RedisUtil;
+import com.example.authservice.global.util.TokenUtil;
 import com.example.jwtutillib.JwtUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,6 +30,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final JwtUtil jwtUtil;
+    private final TokenUtil tokenUtil;
     private final RedisUtil redisUtil;
     private final JobServiceClient jobServiceClient;
     private final CoverLetterServiceClient coverLetterServiceClient;
@@ -124,6 +127,22 @@ public class UserService {
         //빈 쿠키 생성
         Cookie cookie = createCookie("refresh", null, 0);
         response.addCookie(cookie);
+    }
+
+    //사용자 정보 반환
+    public UserResDTO.userInformDTO getUserInform(HttpServletRequest request){
+       String token = tokenUtil.checkToken(request);
+       Long userId = jwtUtil.getUserId(token);
+       User user = userRepository.findById(userId)
+               .orElseThrow(() -> new UserExceptionHandler(UserErrorStatus._NOT_EXIST_USER));
+
+       String name = user.getName();
+       int point = user.getPoint();
+
+       return UserResDTO.userInformDTO.builder()
+               .name(name)
+               .point(point)
+               .build();
     }
 
     //비번 변경
