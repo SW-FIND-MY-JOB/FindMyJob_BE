@@ -21,6 +21,7 @@ public class CorsConfig {
         config.addAllowedHeader("*"); // 모든 헤더 허용
         config.addAllowedMethod("*"); // GET, POST, PUT, DELETE 등 모든 메서드 허용
 
+        config.addExposedHeader("Authorization");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config); // 모든 경로에 대해 위 CORS 적용
 
