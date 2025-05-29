@@ -4,9 +4,6 @@ on:
   push:
     branches: [ main, cicd ]
 
-  pull_request:
-    branches: [ main, cicd ]
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
