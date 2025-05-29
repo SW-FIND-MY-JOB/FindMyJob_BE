@@ -43,7 +43,7 @@ public class NoticeScheduler {
     }
 
     //1시간 마다 갱신
-    @Scheduled(cron = "0 0 */1 * * *")
+    @Scheduled(cron = "0 */10 * * * *")
     public void noticeScheduler(){
         saveNoticeApi();
     }
@@ -62,7 +62,7 @@ public class NoticeScheduler {
         if (redisUtil.existData("noticeRecrutStart")) {
             pbancBgngYmd = redisUtil.getData("noticeRecrutStart");
         } else {
-            pbancBgngYmd = "20250501";
+            pbancBgngYmd = "20250101";
         }
 
         List<Notice> allNotices = new ArrayList<>();
