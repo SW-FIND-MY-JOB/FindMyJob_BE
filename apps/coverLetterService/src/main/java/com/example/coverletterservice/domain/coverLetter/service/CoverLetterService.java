@@ -48,7 +48,9 @@ public class CoverLetterService {
         authServiceClient.addUserPoint(userId, 500);
 
         // 저장된 자소서 ID 반환
-        return coverLetter.getId();
+        return CoverLetterResDTO.CoverLetterIdResDTO.builder()
+                .id(coverLetter.getId())
+                .build();
     }
 
     //단일 자조서 조회
