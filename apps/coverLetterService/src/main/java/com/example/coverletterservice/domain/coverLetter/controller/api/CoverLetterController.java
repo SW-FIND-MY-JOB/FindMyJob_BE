@@ -26,9 +26,9 @@ public class CoverLetterController {
     //자소서 작성
     @PostMapping
     @Operation(summary = "자소서 작성", description = "자소서 작성하기")
-    public ApiResponse<Null> createCoverLetter(HttpServletRequest request, @RequestBody @Valid CoverLetterReqDTO.CoverLetterInformDTO coverLetterInformDTO){
-        coverLetterService.createCoverLetter(request, coverLetterInformDTO);
-        return ApiResponse.of(CoverLetterSuccessStatus._SUCCESS_CREATE_COVER_LETTER);
+    public ApiResponse<CoverLetterResDTO.CoverLetterIdResDTO> createCoverLetter(HttpServletRequest request, @RequestBody @Valid CoverLetterReqDTO.CoverLetterInformDTO coverLetterInformDTO){
+        CoverLetterResDTO.CoverLetterIdResDTO coverLetterIdResDTO = coverLetterService.createCoverLetter(request, coverLetterInformDTO);
+        return ApiResponse.of(CoverLetterSuccessStatus._SUCCESS_CREATE_COVER_LETTER, coverLetterIdResDTO);
     }
 
     //자소서 단일 조회

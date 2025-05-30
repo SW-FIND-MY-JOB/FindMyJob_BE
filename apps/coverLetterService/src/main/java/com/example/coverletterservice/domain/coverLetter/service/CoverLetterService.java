@@ -34,7 +34,7 @@ public class CoverLetterService {
 
     //자소서 저장
     @Transactional
-    public void createCoverLetter(HttpServletRequest request, CoverLetterReqDTO.CoverLetterInformDTO coverLetterInfo){
+    public CoverLetterResDTO.CoverLetterIdResDTO createCoverLetter(HttpServletRequest request, CoverLetterReqDTO.CoverLetterInformDTO coverLetterInfo){
         //토큰 검증
         String token = tokenUtil.checkToken(request);
 
@@ -46,6 +46,9 @@ public class CoverLetterService {
 
         //유저 포인트 적립
         authServiceClient.addUserPoint(userId, 500);
+
+        // 저장된 자소서 ID 반환
+        return coverLetter.getId();
     }
 
     //단일 자조서 조회
