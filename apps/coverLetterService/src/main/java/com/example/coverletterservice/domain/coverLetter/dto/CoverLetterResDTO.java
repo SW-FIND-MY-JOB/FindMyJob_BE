@@ -97,4 +97,11 @@ public class CoverLetterResDTO {
         @Schema(description = "자소서 스크랩 유무", example = "true")
         Boolean isScrap;
     }
+
+    @Getter
+    @Builder
+    public static class CoverLetterIdResDTO{
+        @Schema(description = "자소서 id", example = "1")
+        Long id;
+    }
 }
