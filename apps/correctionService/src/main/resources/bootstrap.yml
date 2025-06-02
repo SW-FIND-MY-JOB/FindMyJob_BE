@@ -13,6 +13,9 @@ spring:
         initial-interval: 1000
       request-connect-timeout: 10000  # milliseconds
       request-read-timeout: 10000
+    openfeign:
+      circuitbreaker:
+        enabled: true
 
 eureka:
   client:

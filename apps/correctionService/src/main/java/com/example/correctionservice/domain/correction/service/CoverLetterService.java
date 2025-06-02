@@ -14,12 +14,13 @@ import org.springframework.stereotype.Service;
 public class CoverLetterService {
     private final CoverLetterServiceClient coverLetterServiceClient;
 
-    @CircuitBreaker(name = "coverLetterService", fallbackMethod = "getCoverLetterContentPointFallback")
+    @CircuitBreaker(name = "cover-letter-service", fallbackMethod = "getCoverLetterContentPointFallback")
     public String getCoverLetterContent(Long coverLetterId) {
-        return coverLetterServiceClient.getCoverLetterContent(coverLetterId);
+        log.info("자소서 요청: {}", coverLetterId);
+        return coverLetterServiceClient.getCoverLetterContent(coverLetterId).getBody();
     }
 
-    public void getCoverLetterContentPointFallback(Long coverLetterId, Throwable t){
+    public String getCoverLetterContentPointFallback(Long coverLetterId, Throwable t){
         log.error("Circuit breaker fallback 작동! 원인: {}", t.getMessage());
         throw new GeneralException(ErrorStatus._COVER_LETTER_SERVICE_UNAVAILABLE);
     }
