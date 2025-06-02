@@ -24,7 +24,6 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class CorrectionService {
-    private final JwtUtil jwtUtil;
     private final TokenUtil tokenUtil;
     private final AuthServiceClient authServiceClient;
     private final CoverLetterServiceClient coverLetterServiceClient;
@@ -39,18 +38,18 @@ public class CorrectionService {
         //사용자 추출
         Long userId = tokenUtil.getUserId(request);
 
-        //포인트 사용
-        try{
-            authServiceClient.useUserPoint(userId, 300);
-        } catch ( FeignException.BadRequest e ){
+        //포인트 사용 가능 여부 조회
+        if( !authServiceClient.enoughUserPoint(userId, 300)){
+            log.error("포인트가 부족합니다.");
             //포인트 부족 에러
             throw new GeneralException(CorrectionErrorStatus._NOT_ENOUGH_POINT);
         }
+        log.info("포인트 사용 가능!");
 
         //다른 사람 자소서 내용 추출
         String otherContent = null;
         try{
-            otherContent = coverLetterServiceClient.getCoverLetterContent(correctionReqInform.getCoverLetterId());
+            otherContent = coverLetterServiceClient.getCoverLetterContent(correctionReqInform.getCoverLetterId()).getBody();
         } catch ( FeignException.BadRequest e ){
             //자소서 내용 없음 에러
             throw new GeneralException(CorrectionErrorStatus._NOT_EXIST_COVER_LETTER);
@@ -60,7 +59,24 @@ public class CorrectionService {
         String myTitle = correctionReqInform.getTitle();
         String myContent = correctionReqInform.getContent();
 
-        return correctionFromAi(otherContent, myTitle, myContent);
+        List<CorrectionResDTO.FeedbackResDTO> feedbackResDTOList = null;
+        try {
+            feedbackResDTOList = correctionFromAi(otherContent, myTitle, myContent);
+        } catch ( FeignException e){
+            log.error("GPT에러: {}", e.getMessage());
+        }
+        log.info("GPT 응답 성공!");
+
+        //포인트 사용
+        try{
+            authServiceClient.useUserPoint(userId, 300);
+        } catch ( FeignException.BadRequest e ){
+            log.error("포인트가 부족합니다! 2");
+            //포인트 부족 에러
+            throw new GeneralException(CorrectionErrorStatus._NOT_ENOUGH_POINT);
+        }
+
+        return feedbackResDTOList;
     }
 
     public List<CorrectionResDTO.FeedbackResDTO> correctionFromAi(String otherContent, String myTitle, String myContent){
@@ -78,13 +94,14 @@ public class CorrectionService {
     // OpenAI 요청 본문 생성 (기사 요약)
     private Map<String, Object> createRequestBody(String otherContent, String myTitle, String myContent) {
         return Map.of(
-                "model", "gpt-4o-mini",
+                "model", "gpt-4o",
                 "messages", List.of(
                         Map.of("role", "system", "content", "너는 자기소개서를 첨삭하는 전문가야."),
-                        Map.of("role", "system", "content", "다음은 다른 사람이 작성한 자기소개서 내용이야. 이 내용을 참고해서 요청받은 자기소개서를 문장별로 나누고 응답을 반드시 JSON 형식으로 피드백을 제공해줘." + otherContent),
+                        Map.of("role", "system", "content", "다음은 다른 사람이 작성한 자기소개서 내용이야." + otherContent),
+                        Map.of("role", "system", "content", "이 내용을 참고해서 요청받은 자기소개서를 문장별로 나누고 응답을 반드시 JSON 형식으로 각 문장에 대해 빠짐없이 문법, 문장구조, 표현력, 추가적으로 개선해야할 부분에 대해 피드백을 제공해줘. 피드백 내용은 ~습니다 체로 끝맞춰줘." + otherContent),
                         Map.of("role", "user", "content", "다음은 자기소개서 제목이야. " + myTitle),
                         Map.of("role", "user", "content", "다음은 자기소개서 내용이야. " + myContent),
-                        Map.of("role", "user", "content", "각 문장에 대해 비판적으로 검토하고, 각각에 아래 형식의 JSON 배열로 피드백 해줘. " +
+                        Map.of("role", "user", "content", "각 문장에 대해 비판적으로 검토하고, 각각에 아래 형식의 JSON 배열로 피드백 해줘. 만약 수정할 부분이 없다고 느껴진다면 editPoint에 null 이라고 적어줘" +
                                 "응답 형식 예시: "+
                                 "[ { \"content\": \"문장 내용\", \"goodPoint\": \"장점 설명\", \"editPoint\": \"수정할 점 설명\", \"editContent\": \"수정한 문장 내용\" } ...]")
                 ),
