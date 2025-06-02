@@ -27,7 +27,10 @@ public class TokenUtil {
         token = token.substring(7);
 
         //토큰 만료 검사
-        if(jwtUtil.isExpired(token)){
+        try{
+            jwtUtil.isExpired(token);
+        } catch (Exception e) {
+            log.error("토큰 만료 검사: {}", e.getMessage());
             throw new GeneralException(GlobalErrorStatus._EXPIRED_TOKEN);
         }
 

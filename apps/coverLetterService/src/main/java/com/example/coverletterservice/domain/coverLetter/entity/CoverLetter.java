@@ -23,7 +23,7 @@ public class CoverLetter extends BaseEntity {
     private String ncsCdNmLst;
 
     //질문
-    @Column(name = "title", nullable = false)
+    @Column(name = "title", nullable = false, columnDefinition = "TEXT")
     private String title;
 
     //내용

@@ -13,6 +13,7 @@
             <option value="$PROJECT_DIR$/apps/apiGateWay" />
             <option value="$PROJECT_DIR$/apps/authService" />
             <option value="$PROJECT_DIR$/apps/configServer" />
+            <option value="$PROJECT_DIR$/apps/correctionService" />
             <option value="$PROJECT_DIR$/apps/coverLetterService" />
             <option value="$PROJECT_DIR$/apps/eurekaServer" />
             <option value="$PROJECT_DIR$/apps/jobService" />

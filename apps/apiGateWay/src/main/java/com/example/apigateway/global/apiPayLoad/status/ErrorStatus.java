@@ -19,7 +19,14 @@ public enum ErrorStatus implements BaseErrorCode {
     // 토큰 관련 에러
     _NOT_EXIST_TOKEN(HttpStatus.UNAUTHORIZED, "TOKEN4011", "엑세스 토큰이 없습니다."),
     _EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "TOKEN4012", "엑세스 토큰이 만료되었습니다."),
-    _NOT_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "TOKEN4013", "엑세스 토큰이 아닙니다.");
+    _NOT_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED, "TOKEN4013", "엑세스 토큰이 아닙니다."),
+
+    // 내부 통신 관련 에러
+    _JOB_SERVICE_UNAVAILABLE(HttpStatus.SERVICE_UNAVAILABLE, "JOB503", "채용공고 서비스가 현재 응답하지 않습니다."),
+    _COVER_LETTER_SERVICE_UNAVAILABLE(HttpStatus.SERVICE_UNAVAILABLE, "COVERLETTER503", "자기소개서 서비스가 현재 응답하지 않습니다."),
+    _AUTH_SERVICE_UNAVAILABLE(HttpStatus.SERVICE_UNAVAILABLE, "USER503", "사용자 서비스가 현재 응답하지 않습니다."),
+    _CORRECTION_SERVICE_UNAVAILABLE(HttpStatus.SERVICE_UNAVAILABLE, "USER503", "AI 첨삭 서비스가 현재 응답하지 않습니다."),
+    ;
 
     private final HttpStatus httpStatus;
     private final String code;

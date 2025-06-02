@@ -12,16 +12,21 @@ public class FallbackController {
 
     @RequestMapping("/auth")
     public ApiResponse<Null> authFallback(){
-        return ApiResponse.onFailure(ErrorStatus._SERVICE_UNAVAILABLE, null);
+        return ApiResponse.onFailure(ErrorStatus._AUTH_SERVICE_UNAVAILABLE, null);
     }
 
     @RequestMapping("/job")
     public ApiResponse<Null> jobFallback(){
-        return ApiResponse.onFailure(ErrorStatus._SERVICE_UNAVAILABLE, null);
+        return ApiResponse.onFailure(ErrorStatus._JOB_SERVICE_UNAVAILABLE, null);
     }
 
     @RequestMapping("/cover-letter")
     public ApiResponse<Null> coverLetterFallback(){
-        return ApiResponse.onFailure(ErrorStatus._SERVICE_UNAVAILABLE, null);
+        return ApiResponse.onFailure(ErrorStatus._COVER_LETTER_SERVICE_UNAVAILABLE, null);
+    }
+
+    @RequestMapping("/correction")
+    public ApiResponse<Null> correctionFallback(){
+        return ApiResponse.onFailure(ErrorStatus._CORRECTION_SERVICE_UNAVAILABLE, null);
     }
 }
