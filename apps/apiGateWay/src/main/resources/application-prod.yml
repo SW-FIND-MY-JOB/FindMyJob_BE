@@ -52,3 +52,14 @@ spring:
               args:
                 name: coverLetterCircuitBreaker
                 fallbackUri: forward:/fallback/cover-letter
+
+        - id: correction-service
+          uri: http://correction:8083
+          predicates:
+            - Path=/correction-service/**
+          filters:
+            - StripPrefix=1
+            - name: CircuitBreaker
+              args:
+                name: correctionCircuitBreaker
+                fallbackUri: forward:/fallback/correction

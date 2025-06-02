@@ -19,10 +19,11 @@ public enum ErrorStatus implements BaseErrorCode {
     MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "사용자가 없습니다."),
     NICKNAME_NOT_EXIST(HttpStatus.BAD_REQUEST, "MEMBER4002", "닉네임은 필수 입니다."),
 
-    // 내부 통신 관련 에러
+    //내부 통신 에러
     _JOB_SERVICE_UNAVAILABLE(HttpStatus.SERVICE_UNAVAILABLE, "JOB503", "채용공고 서비스가 현재 응답하지 않습니다."),
     _COVER_LETTER_SERVICE_UNAVAILABLE(HttpStatus.SERVICE_UNAVAILABLE, "COVERLETTER503", "자기소개서 서비스가 현재 응답하지 않습니다."),
     _AUTH_SERVICE_UNAVAILABLE(HttpStatus.SERVICE_UNAVAILABLE, "USER503", "사용자 서비스가 현재 응답하지 않습니다."),
+    _CORRECTION_SERVICE_UNAVAILABLE(HttpStatus.SERVICE_UNAVAILABLE, "USER503", "AI 첨삭 서비스가 현재 응답하지 않습니다."),
 
     ;
 

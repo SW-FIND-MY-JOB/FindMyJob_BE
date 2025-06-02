@@ -1,7 +1,6 @@
 package com.example.authservice.domain.user.controller.internal;
 
 import com.example.authservice.domain.user.service.UserService;
-import jakarta.validation.constraints.Null;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
