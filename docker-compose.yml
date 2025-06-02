@@ -121,7 +121,7 @@ services:
       - msanet
 
   correction:
-    image: ${MY_DOCKER_ID}/corrctionservice:latest
+    image: ${MY_DOCKER_ID}/correctionservice:latest
     container_name: correction
     depends_on:
       eureka:
