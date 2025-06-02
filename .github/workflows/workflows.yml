@@ -30,7 +30,7 @@ jobs:
 
       # 빌드
       - name: Build All JARs
-        run: ./gradlew :apps:eurekaServer:build :apps:configServer:build :apps:apiGateWay:build :apps:authService:build :apps:jobService:build :apps:coverLetterService:build
+        run: ./gradlew :apps:eurekaServer:build :apps:configServer:build :apps:apiGateWay:build :apps:authService:build :apps:jobService:build :apps:coverLetterService:build :apps:correctionService:build
 
       # 도커 로그인
       - name: Log in to Docker Hub
@@ -39,7 +39,7 @@ jobs:
       # 도커 빌드, 푸쉬
       - name: Build & Push Docker Images
         run: |
-          services=("configServer" "eurekaServer" "apiGateWay" "authService" "jobService" "coverLetterService")
+          services=("configServer" "eurekaServer" "apiGateWay" "authService" "jobService" "coverLetterService" "correctionService")
           for service in "${services[@]}"; do
             lowercase_service=$(echo "$service" | tr '[:upper:]' '[:lower:]')
           
