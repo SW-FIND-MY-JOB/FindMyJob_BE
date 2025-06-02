@@ -5,6 +5,9 @@ spring:
     config:
       uri: http://localhost:8888
       name: correctionservice
+    openfeign:
+      circuitbreaker:
+        enabled: true
 
 eureka:
   client:

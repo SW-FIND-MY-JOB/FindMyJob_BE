@@ -215,7 +215,13 @@ public class UserService {
         user.setPoint(user.getPoint() - point);
         userRepository.save(user);
         log.info("포인트 사용 성공");
+    }
 
+    // 사용자 포인트 사용 가능 조회
+    public Boolean isEnoughPoint(Long userId, Integer point){
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserExceptionHandler(UserErrorStatus._NOT_EXIST_USER));
+        return user.getPoint() >= point;
     }
 
     private Cookie createCookie(String key, String value, int maxAge) {

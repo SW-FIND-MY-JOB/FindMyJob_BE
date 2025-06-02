@@ -17,17 +17,17 @@ spring:
             connect-timeout: 3000
             read-timeout: 3000
 
-  resilience4j:
-    circuitbreaker:
-      instances:
-        authService: # 호출 대상 서비스 명
-          slidingWindowSize: 5
-          failureRateThreshold: 50
-          waitDurationInOpenState: 10s
-          permittedNumberOfCallsInHalfOpenState: 2
+resilience4j:
+  circuitbreaker:
+    instances:
+      auth-service: # 호출 대상 서비스 명
+        slidingWindowSize: 5                   # 최근 5번의 호출 기준
+        failureRateThreshold: 50              # 50% 이상 실패 시 회로 오픈
+        waitDurationInOpenState: 10s          # 오픈 상태 유지 시간
+        permittedNumberOfCallsInHalfOpenState: 2  # 하프 오픈 상태에서 테스트 호출 횟수
 
-        coverLetterService: # 호출 대상 서비스 명
-          slidingWindowSize: 5
-          failureRateThreshold: 50
-          waitDurationInOpenState: 10s
-          permittedNumberOfCallsInHalfOpenState: 2
+      cover-letter-service: # 호출 대상 서비스 명
+        slidingWindowSize: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 2

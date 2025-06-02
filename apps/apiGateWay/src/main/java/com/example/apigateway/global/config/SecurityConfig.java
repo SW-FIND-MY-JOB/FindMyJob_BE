@@ -56,6 +56,11 @@ public class SecurityConfig {
                 //cover-letter-service
                 "/job-service/v3/api-docs/**",
                 "/job-service/swagger-ui/**",
+                "/cover-letter-service/health/**",
+
+                //correction-service
+                "/job-service/v3/api-docs/**",
+                "/job-service/swagger-ui/**",
                 "/cover-letter-service/health/**"
         ));
 
@@ -104,6 +109,10 @@ public class SecurityConfig {
                         .pathMatchers("/cover-letter-service/v3/api-docs/**", "/cover-letter-service/swagger-ui/**").permitAll()
                         .pathMatchers("/cover-letter-service/health/**").permitAll()
                         .pathMatchers(HttpMethod.GET, "/cover-letter-service/api/cover-letters/**").permitAll()
+
+                        //correction-service 인가설정
+                        .pathMatchers("/correction-service/v3/api-docs/**", "/correction-service/swagger-ui/**").permitAll()
+                        .pathMatchers("/correction-service/health/**").permitAll()
 
                         .anyExchange().authenticated()
                 );
