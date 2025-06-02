@@ -1,0 +1,33 @@
+config:
+  health-check: ${health-check}
+
+  jwt-secret: ${jwt-secret}
+
+  gpt-secret: ${gpt-secret}
+
+server:
+  port: ${server-port}
+
+spring:
+  cloud:
+    openfeign:
+      client:
+        config:
+          default:
+            connect-timeout: 3000
+            read-timeout: 3000
+
+  resilience4j:
+    circuitbreaker:
+      instances:
+        authService: # 호출 대상 서비스 명
+          slidingWindowSize: 5
+          failureRateThreshold: 50
+          waitDurationInOpenState: 10s
+          permittedNumberOfCallsInHalfOpenState: 2
+
+        coverLetterService: # 호출 대상 서비스 명
+          slidingWindowSize: 5
+          failureRateThreshold: 50
+          waitDurationInOpenState: 10s
+          permittedNumberOfCallsInHalfOpenState: 2

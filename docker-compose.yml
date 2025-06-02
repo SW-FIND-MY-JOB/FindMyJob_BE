@@ -120,6 +120,19 @@ services:
     networks:
       - msanet
 
+  correction:
+    image: ${MY_DOCKER_ID}/corrctionservice:latest
+    container_name: correction
+    depends_on:
+      eureka:
+        condition: service_started
+      config:
+        condition: service_healthy
+    ports:
+      - "8084:8084"
+    networks:
+      - msanet
+
   nginx:
     image: nginx:latest
     container_name: nginx

@@ -23,7 +23,7 @@ public class CoverLetterReqDTO {
         @Schema(description = "직무", example = "보건")
         String ncsCdNmLst;
 
-        @Size(min = 5, max = 100, message = "질문은 5자 이상 100자 이하로 입력해주세요.")
+        @Size(min = 5, max = 500, message = "질문은 5자 이상 500자 이하로 입력해주세요.")
         @Schema(description = "질문", example = "지원동기 (300자 이상)")
         String title;
 
