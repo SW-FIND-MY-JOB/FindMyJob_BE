@@ -81,7 +81,7 @@ spring:
                 fallbackUri: forward:/fallback/cover-letter
 
         - id: correction-service
-          uri: http://correction:8083
+          uri: http://correction:8084
           predicates:
             - Path=/correction-service/**
           filters:
