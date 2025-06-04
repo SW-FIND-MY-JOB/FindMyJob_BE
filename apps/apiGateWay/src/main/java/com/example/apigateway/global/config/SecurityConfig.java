@@ -51,7 +51,7 @@ public class SecurityConfig {
                 "/job-service/swagger-ui/**",
                 "/job-service/health/**",
                 "/job-service/api/agency/**",
-                "/job-service/api/notice/**",
+                "/job-service/api/notices/**",
 
                 //cover-letter-service
                 "/job-service/v3/api-docs/**",
@@ -103,7 +103,7 @@ public class SecurityConfig {
                         .pathMatchers("/job-service/v3/api-docs/**", "/job-service/swagger-ui/**").permitAll()
                         .pathMatchers("/job-service/health/**").permitAll()
                         .pathMatchers("/job-service/api/agency/**").permitAll()
-                        .pathMatchers("/job-service/api/notice/**").permitAll()
+                        .pathMatchers("/job-service/api/notices/**").permitAll()
 
                         //cover-letter-service 인가설정
                         .pathMatchers("/cover-letter-service/v3/api-docs/**", "/cover-letter-service/swagger-ui/**").permitAll()
