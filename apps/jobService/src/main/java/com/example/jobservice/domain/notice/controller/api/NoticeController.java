@@ -22,6 +22,7 @@ public class NoticeController {
     @GetMapping("/informs")
     @Operation(summary = "채용 공고 가져오기", description = "조건 검색으로 정보 가져오기 (페이징 처리)")
     public ApiResponse<Page<NoticeResDTO.NoticeInformDTO>> getNoticeInforms(
+            HttpServletRequest request,
             //근무지역 코드
             @RequestParam(name = "regionCD", defaultValue = "all") String region,
             //직무 코드
@@ -37,7 +38,7 @@ public class NoticeController {
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "size", defaultValue = "5") int size){
 
-        Page<NoticeResDTO.NoticeInformDTO> noticeInformDTOS = noticeService.searchNotices(region, category, history, edu, type, keyword, page, size);
+        Page<NoticeResDTO.NoticeInformDTO> noticeInformDTOS = noticeService.searchNotices(request, region, category, history, edu, type, keyword, page, size);
 
         return ApiResponse.of(NoticeSuccessStatus._SUCCESS_GET_NOTICE_INFORM, noticeInformDTOS);
     }
