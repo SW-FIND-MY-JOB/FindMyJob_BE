@@ -25,14 +25,26 @@ public class NoticeService {
     private final NoticeRepository noticeRepository;
     private final NoticeScrapRepository noticeScrapRepository;
     private final TokenUtil tokenUtl;
-    private final JwtUtil jwtUtil;
 
     //공고 조건검색
-    public Page<NoticeResDTO.NoticeInformDTO> searchNotices(String region, String category, String history, String edu,
+    public Page<NoticeResDTO.NoticeInformDTO> searchNotices(HttpServletRequest request, String region, String category, String history, String edu,
                                       String type, String keyword, int page, int size){
+        //사용자 id가져옴
+        Long userId = tokenUtl.getUserId(request);
+
         Pageable pageable = PageRequest.of(page - 1, size);
         Page<Notice> result = noticeRepository.searchNotices(region, category, history, edu, type, keyword, pageable);
-        return result.map(dto -> NoticeConverter.toNoticeResDTO(dto, false));
+
+        //사용자가 로그인을 하지 않았다면
+        if(userId == null){
+            return result.map(dto -> NoticeConverter.toNoticeResDTO(dto, false));
+        }
+
+        //사용자가 로그인을 했다면
+        return result.map(dto -> {
+            boolean isScrap =  noticeScrapRepository.existsByNoticeAndUserId(dto, userId);
+            return NoticeConverter.toNoticeResDTO(dto, isScrap);
+        });
     }
 
     //단일 공고 조회
