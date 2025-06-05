@@ -21,6 +21,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -43,6 +45,20 @@ public class CoverLetterScrapService {
 
         Page<CoverLetterScrap> result = coverLetterScrapRepository.findAllByUserIdOrderByCreatedAtDesc(userId, pageable);
         return result.map(coverLetterScrap -> CoverLetterConverter.toCoverLetterInformDTO(coverLetterScrap.getCoverLetter(), true));
+    }
+
+    //스크랩한 자소서 모두 보여주기
+    public List<CoverLetterResDTO.CoverLetterInformDTO> searchAllCoverLetterScrap(HttpServletRequest request){
+        //토큰 검증
+        String token = tokenUtil.checkToken(request);
+
+        //사용자 ID 추출
+        Long userId = jwtUtil.getUserId(token);
+
+        List<CoverLetterScrap> result = coverLetterScrapRepository.findAllByUserIdOrderByCreatedAtDesc(userId);
+        return result.stream()
+                .map(coverLetterScrap -> CoverLetterConverter.toCoverLetterInformDTO(coverLetterScrap.getCoverLetter(), true))
+                .toList();
     }
 
 
