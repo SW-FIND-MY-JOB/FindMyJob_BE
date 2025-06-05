@@ -13,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Validated
 @RequiredArgsConstructor
 @RestController
@@ -28,6 +30,14 @@ public class CoverLetterScrapController {
                                                                        @RequestParam(name = "page", defaultValue = "1") int page,
                                                                        @RequestParam(name = "size", defaultValue = "5") int size){
         Page<CoverLetterResDTO.CoverLetterInformDTO> coverLetterInformDTOList = coverLetterScrapService.searchCoverLetterScrap(request, page, size);
+        return ApiResponse.of(CoverLetterSuccessStatus._SUCCESS_GET_COVER_LETTER, coverLetterInformDTOList);
+    }
+
+    //스크랩한 정보 모두 보여주기
+    @GetMapping
+    @Operation(summary = "스크랩한 자소서 모두 가져오기", description = "스크랩한 자소서 모두 가져오기")
+    public ApiResponse<List<CoverLetterResDTO.CoverLetterInformDTO>> searchAllScrapCoverLetter(HttpServletRequest request){
+        List<CoverLetterResDTO.CoverLetterInformDTO> coverLetterInformDTOList = coverLetterScrapService.searchAllCoverLetterScrap(request);
         return ApiResponse.of(CoverLetterSuccessStatus._SUCCESS_GET_COVER_LETTER, coverLetterInformDTOList);
     }
 
