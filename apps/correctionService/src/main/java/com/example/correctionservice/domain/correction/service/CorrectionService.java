@@ -25,8 +25,9 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CorrectionService {
     private final TokenUtil tokenUtil;
-    private final AuthServiceClient authServiceClient;
+    private final UserPointService userPointService;
     private final CoverLetterServiceClient coverLetterServiceClient;
+    private final CoverLetterService coverLetterService;
     private final WebClient openAiWebClient;
     private final ObjectMapper objectMapper;
 
@@ -39,7 +40,7 @@ public class CorrectionService {
         Long userId = tokenUtil.getUserId(request);
 
         //포인트 사용 가능 여부 조회
-        if( !authServiceClient.enoughUserPoint(userId, 300)){
+        if( !userPointService.enoughUserPoint(userId, 300)){
             log.error("포인트가 부족합니다.");
             //포인트 부족 에러
             throw new GeneralException(CorrectionErrorStatus._NOT_ENOUGH_POINT);
@@ -49,7 +50,7 @@ public class CorrectionService {
         //다른 사람 자소서 내용 추출
         String otherContent = null;
         try{
-            otherContent = coverLetterServiceClient.getCoverLetterContent(correctionReqInform.getCoverLetterId()).getBody();
+            otherContent = coverLetterService.getCoverLetterContent(correctionReqInform.getCoverLetterId());
         } catch ( FeignException.BadRequest e ){
             //자소서 내용 없음 에러
             throw new GeneralException(CorrectionErrorStatus._NOT_EXIST_COVER_LETTER);
@@ -69,7 +70,7 @@ public class CorrectionService {
 
         //포인트 사용
         try{
-            authServiceClient.useUserPoint(userId, 300);
+            userPointService.useUserPoint(userId, 300);
         } catch ( FeignException.BadRequest e ){
             log.error("포인트가 부족합니다! 2");
             //포인트 부족 에러
