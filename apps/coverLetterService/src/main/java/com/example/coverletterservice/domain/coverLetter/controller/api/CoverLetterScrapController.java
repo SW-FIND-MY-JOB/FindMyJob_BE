@@ -34,7 +34,7 @@ public class CoverLetterScrapController {
     }
 
     //스크랩한 정보 모두 보여주기
-    @GetMapping
+    @GetMapping("/all")
     @Operation(summary = "스크랩한 자소서 모두 가져오기", description = "스크랩한 자소서 모두 가져오기")
     public ApiResponse<List<CoverLetterResDTO.CoverLetterInformDTO>> searchAllScrapCoverLetter(HttpServletRequest request){
         List<CoverLetterResDTO.CoverLetterInformDTO> coverLetterInformDTOList = coverLetterScrapService.searchAllCoverLetterScrap(request);
