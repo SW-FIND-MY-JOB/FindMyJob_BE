@@ -3,6 +3,7 @@ package com.example.jobservice.domain.notice.service;
 import com.example.jobservice.domain.notice.converter.NoticeConverter;
 import com.example.jobservice.domain.notice.converter.NoticeScrapConverter;
 import com.example.jobservice.domain.notice.dto.notice.NoticeResDTO;
+import com.example.jobservice.domain.notice.dto.scrapNotice.NoticeScrapResDTO;
 import com.example.jobservice.domain.notice.entity.Notice;
 import com.example.jobservice.domain.notice.entity.NoticeScrap;
 import com.example.jobservice.domain.notice.exception.status.NoticeErrorStatus;
@@ -19,6 +20,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -94,5 +98,22 @@ public class NoticeScrapService {
         Page<NoticeScrap> result = noticeScrapRepository.findAllByUserIdOrderByCreatedAtDesc(userId, pageable);
 
         return result.map(dto-> NoticeConverter.toNoticeResDTO(dto.getNotice(), true));
+    }
+
+    //월별 스크랩 공고 보여주기
+    public List<NoticeScrapResDTO.CalendarNoticeInformDTO> searchDateNoticeScrap(HttpServletRequest request, int year, int month) {
+        //토큰 검증
+        String token = tokenUtil.checkToken(request);
+
+        //사용자 ID 추출
+        Long userId = jwtUtil.getUserId(token);
+
+        LocalDate startOfMonth = LocalDate.of(year, month, 1);
+        LocalDate endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.lengthOfMonth());
+
+        //사용자 ID와 date에 맞는 스크랩 공고 가져오기
+        List<NoticeScrap> result = noticeScrapRepository.findNoticesWithinMonth(userId, startOfMonth, endOfMonth);
+
+        return result.stream().map(NoticeScrapConverter::toCalendarNoticeInformDTO).toList();
     }
 }
