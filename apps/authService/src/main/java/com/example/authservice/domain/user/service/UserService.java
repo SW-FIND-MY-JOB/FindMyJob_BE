@@ -19,6 +19,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +35,9 @@ public class UserService {
     private final RedisUtil redisUtil;
     private final JobServiceClient jobServiceClient;
     private final CoverLetterServiceClient coverLetterServiceClient;
+
+    @Value("${config.isDev}")
+    boolean isDev;
 
     //회원가입
     @Transactional
@@ -86,11 +90,11 @@ public class UserService {
         redisUtil.setData("refresh:"+email, refresh, refreshExpiredMs);
 
         //쿠키 생성
-        Cookie cookie = createCookie("refresh", refresh, 60 * 60 * 24 * 7);
+        String cookieStr = createCookie("refresh", refresh, 60 * 60 * 24 * 7, isDev);
 
         //응답 헤더에 토큰과 쿠키 삽입
         response.addHeader("Authorization", "Bearer " + access);
-        response.addCookie(cookie);
+        response.addHeader("Set-Cookie", cookieStr);
     }
 
     //이메일 중복여부
@@ -125,8 +129,8 @@ public class UserService {
         }
 
         //빈 쿠키 생성
-        Cookie cookie = createCookie("refresh", null, 0);
-        response.addCookie(cookie);
+        String cookieStr = createCookie("refresh", null, 0, isDev);
+        response.addHeader("Set-Cookie", cookieStr);
     }
 
     //사용자 정보 반환
@@ -224,12 +228,18 @@ public class UserService {
         return user.getPoint() >= point;
     }
 
-    private Cookie createCookie(String key, String value, int maxAge) {
-        Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(maxAge);       // 7일
-        cookie.setPath("/");                  // 모든 경로에 대해 전송
-        cookie.setHttpOnly(true);             // JS에서 접근 불가 (보안)
-         cookie.setSecure(true);            // HTTPS만 허용 (배포 환경에서만 활성화)
-        return cookie;
+    private String createCookie(String key, String value, int maxAge, boolean isDev) {
+        StringBuilder cookieBuilder = new StringBuilder();
+        cookieBuilder.append(key).append("=").append(value)
+                .append("; Max-Age=").append(maxAge)
+                .append("; Path=/")
+                .append("; HttpOnly")
+                .append("; SameSite=None");
+
+        if (!isDev) {
+            cookieBuilder.append("; Secure");
+        }
+
+        return cookieBuilder.toString();
     }
 }
