@@ -229,7 +229,7 @@ public class UserService {
         cookie.setMaxAge(maxAge);       // 7일
         cookie.setPath("/");                  // 모든 경로에 대해 전송
         cookie.setHttpOnly(true);             // JS에서 접근 불가 (보안)
-        // cookie.setSecure(true);            // HTTPS만 허용 (배포 환경에서만 활성화)
+         cookie.setSecure(true);            // HTTPS만 허용 (배포 환경에서만 활성화)
         return cookie;
     }
 }
