@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum ReissueSuccessStatus implements BaseCode {
-    _SUCCESS_CREATE_TOKEN(HttpStatus.CREATED, "MAIL2011", "토큰 재발급 성공");
+    _SUCCESS_CREATE_TOKEN(HttpStatus.CREATED, "TOKEN2011", "토큰 재발급 성공");
 
     private final HttpStatus httpStatus;
     private final String code;

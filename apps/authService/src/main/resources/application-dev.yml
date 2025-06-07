@@ -11,6 +11,8 @@ config:
   mail-username: ${mail-username}
   mail-password: ${mail-password}
 
+  isDev: true
+
 server:
   port: ${server-port}
 
