@@ -6,6 +6,7 @@ import com.example.jobservice.domain.notice.entity.Notice;
 import com.example.jobservice.domain.notice.exception.status.NoticeErrorStatus;
 import com.example.jobservice.domain.notice.repository.NoticeRepository;
 import com.example.jobservice.domain.notice.repository.NoticeScrapRepository;
+import com.example.jobservice.domain.notice.specification.NoticeSpecification;
 import com.example.jobservice.global.exception.GeneralException;
 import com.example.jobservice.global.util.TokenUtil;
 import com.example.jwtutillib.JwtUtil;
@@ -16,7 +17,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -27,13 +32,23 @@ public class NoticeService {
     private final TokenUtil tokenUtl;
 
     //공고 조건검색
-    public Page<NoticeResDTO.NoticeInformDTO> searchNotices(HttpServletRequest request, String region, String category, String history, String edu,
-                                      String type, String keyword, int page, int size){
+    public Page<NoticeResDTO.NoticeInformDTO> searchNotices(HttpServletRequest request,
+                                                            List<String> regionList,
+                                                            List<String> categoryList,
+                                                            List<String> historyList,
+                                                            List<String> eduList,
+                                                            List<String> typeList,
+                                                            String keyword,
+                                                            int page, int size){
         //사용자 id가져옴
         Long userId = tokenUtl.getUserId(request);
 
-        Pageable pageable = PageRequest.of(page - 1, size);
-        Page<Notice> result = noticeRepository.searchNotices(region, category, history, edu, type, keyword, pageable);
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "pbancBgngYmd"));
+
+        //조건 검색
+        Specification<Notice> spec = NoticeSpecification.searchByConditions(regionList, categoryList, historyList, eduList, typeList, keyword);
+
+        Page<Notice> result = noticeRepository.findAll(spec, pageable);
 
         //사용자가 로그인을 하지 않았다면
         if(userId == null){

@@ -30,7 +30,7 @@ public class NoticeResDTO {
         @Schema(description = "학력", example = "학력무관")
         String acbgCondNmLst;
 
-        @Schema(description = "채용구분이름", example = "정규직")
+        @Schema(description = "채용구분이름", example = "신입+경력")
         String recrutSeNm;
 
         @Schema(description = "공고마감일", example = "20250111")
