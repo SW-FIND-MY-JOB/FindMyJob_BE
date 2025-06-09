@@ -108,11 +108,15 @@ public class NoticeScrapService {
         //사용자 ID 추출
         Long userId = jwtUtil.getUserId(token);
 
-        LocalDate startOfMonth = LocalDate.of(year, month, 1);
-        LocalDate endOfMonth = startOfMonth.withDayOfMonth(startOfMonth.lengthOfMonth());
+        // 기준 월
+        LocalDate currentMonthStart = LocalDate.of(year, month, 1);
+
+        // 앞달, 뒷달 포함한 범위
+        LocalDate startDate = currentMonthStart.minusMonths(1).withDayOfMonth(1);
+        LocalDate endDate = currentMonthStart.plusMonths(1).withDayOfMonth(currentMonthStart.plusMonths(1).lengthOfMonth());
 
         //사용자 ID와 date에 맞는 스크랩 공고 가져오기
-        List<NoticeScrap> result = noticeScrapRepository.findNoticesWithinMonth(userId, startOfMonth, endOfMonth);
+        List<NoticeScrap> result = noticeScrapRepository.findNoticesWithinMonth(userId, startDate, endDate);
 
         return result.stream().map(NoticeScrapConverter::toCalendarNoticeInformDTO).toList();
     }
