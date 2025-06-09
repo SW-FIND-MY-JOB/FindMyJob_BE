@@ -1,13 +1,13 @@
 package com.example.correctionservice.domain.correction.service;
 
-import com.example.correctionservice.domain.correction.client.AuthServiceClient;
 import com.example.correctionservice.domain.correction.client.CoverLetterServiceClient;
 import com.example.correctionservice.domain.correction.dto.CorrectionReqDTO;
 import com.example.correctionservice.domain.correction.dto.CorrectionResDTO;
 import com.example.correctionservice.domain.correction.exception.status.CorrectionErrorStatus;
+import com.example.correctionservice.domain.correction.fallbackService.AuthFallbackService;
+import com.example.correctionservice.domain.correction.fallbackService.CoverLetterFallbackService;
 import com.example.correctionservice.global.exception.GeneralException;
 import com.example.correctionservice.global.util.TokenUtil;
-import com.example.jwtutillib.JwtUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.FeignException;
@@ -25,11 +25,14 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CorrectionService {
     private final TokenUtil tokenUtil;
-    private final UserPointService userPointService;
+//    private final UserPointService userPointService;
     private final CoverLetterServiceClient coverLetterServiceClient;
-    private final CoverLetterService coverLetterService;
+//    private final CoverLetterService coverLetterService;
     private final WebClient openAiWebClient;
     private final ObjectMapper objectMapper;
+
+    private final AuthFallbackService authFallbackService;
+    private final CoverLetterFallbackService coverLetterFallbackService;
 
     //피드백 요청하는 서비스단
     public List<CorrectionResDTO.FeedbackResDTO> getCorrection(HttpServletRequest request, CorrectionReqDTO.CorrectionReqInform correctionReqInform){
@@ -40,7 +43,7 @@ public class CorrectionService {
         Long userId = tokenUtil.getUserId(request);
 
         //포인트 사용 가능 여부 조회
-        if( !userPointService.enoughUserPoint(userId, 300)){
+        if( !authFallbackService.enoughUserPoint(userId, 300)){
             log.error("포인트가 부족합니다.");
             //포인트 부족 에러
             throw new GeneralException(CorrectionErrorStatus._NOT_ENOUGH_POINT);
@@ -48,13 +51,7 @@ public class CorrectionService {
         log.info("포인트 사용 가능!");
 
         //다른 사람 자소서 내용 추출
-        String otherContent = null;
-        try{
-            otherContent = coverLetterService.getCoverLetterContent(correctionReqInform.getCoverLetterId());
-        } catch ( FeignException.BadRequest e ){
-            //자소서 내용 없음 에러
-            throw new GeneralException(CorrectionErrorStatus._NOT_EXIST_COVER_LETTER);
-        }
+        String otherContent = coverLetterFallbackService.getCoverLetterContent(correctionReqInform.getCoverLetterId());
 
         //내 자소서 내용 추출
         String myTitle = correctionReqInform.getTitle();
@@ -65,18 +62,12 @@ public class CorrectionService {
             feedbackResDTOList = correctionFromAi(otherContent, myTitle, myContent);
         } catch ( FeignException e){
             log.error("GPT에러: {}", e.getMessage());
+            throw new GeneralException(CorrectionErrorStatus._GPT_ERROR);
         }
         log.info("GPT 응답 성공!");
 
         //포인트 사용
-        try{
-            userPointService.useUserPoint(userId, 300);
-        } catch ( FeignException.BadRequest e ){
-            log.error("포인트가 부족합니다! 2");
-            //포인트 부족 에러
-            throw new GeneralException(CorrectionErrorStatus._NOT_ENOUGH_POINT);
-        }
-
+        authFallbackService.useUserPoint(userId, 300);
         return feedbackResDTOList;
     }
 
