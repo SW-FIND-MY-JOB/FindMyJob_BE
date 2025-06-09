@@ -149,6 +149,17 @@ services:
     networks:
       - msanet
 
+  dozzle:
+    image: amir20/dozzle:latest
+    container_name: dozzle
+    ports:
+      - "8889:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock  # 로그 접근을 위한 도커 소켓 마운트
+    restart: unless-stopped
+    networks:
+      - msanet
+
 volumes:
   mysql-data:
 
