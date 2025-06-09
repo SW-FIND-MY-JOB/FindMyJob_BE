@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/notices")
 @RequiredArgsConstructor
@@ -24,21 +26,21 @@ public class NoticeController {
     public ApiResponse<Page<NoticeResDTO.NoticeInformDTO>> getNoticeInforms(
             HttpServletRequest request,
             //근무지역 코드
-            @RequestParam(name = "regionCD", defaultValue = "all") String region,
+            @RequestParam(name = "regionCD", required = false) List<String> regionList,
             //직무 코드
-            @RequestParam(name = "categoryCD", defaultValue = "all") String category,
+            @RequestParam(name = "categoryCD", required = false) List<String> categoryList,
             //경력 코드
-            @RequestParam(name = "historyCD", defaultValue = "all") String history,
+            @RequestParam(name = "historyCD", required = false) List<String> historyList,
             //학력 코드
-            @RequestParam(name = "eduCD", defaultValue = "all") String edu,
+            @RequestParam(name = "eduCD", required = false) List<String> eduList,
             //채용유형(정규직) 코드
-            @RequestParam(name = "typeCD", defaultValue = "all") String type,
+            @RequestParam(name = "typeCD", required = false) List<String> typeList,
             //키워드
             @RequestParam(name = "keyword", defaultValue = "") String keyword,
             @RequestParam(name = "page", defaultValue = "1") int page,
             @RequestParam(name = "size", defaultValue = "5") int size){
 
-        Page<NoticeResDTO.NoticeInformDTO> noticeInformDTOS = noticeService.searchNotices(request, region, category, history, edu, type, keyword, page, size);
+        Page<NoticeResDTO.NoticeInformDTO> noticeInformDTOS = noticeService.searchNotices(request, regionList, categoryList, historyList, eduList, typeList, keyword, page, size);
 
         return ApiResponse.of(NoticeSuccessStatus._SUCCESS_GET_NOTICE_INFORM, noticeInformDTOS);
     }
