@@ -8,6 +8,8 @@ import com.example.authservice.domain.user.dto.UserResDTO;
 import com.example.authservice.domain.user.entity.User;
 import com.example.authservice.domain.user.exception.UserExceptionHandler;
 import com.example.authservice.domain.user.exception.status.UserErrorStatus;
+import com.example.authservice.domain.user.fallbackService.CoverLetterFallbackService;
+import com.example.authservice.domain.user.fallbackService.JobFallbackService;
 import com.example.authservice.domain.user.repository.UserRepository;
 import com.example.authservice.global.exception.GeneralException;
 import com.example.authservice.global.redis.RedisUtil;
@@ -33,8 +35,8 @@ public class UserService {
     private final JwtUtil jwtUtil;
     private final TokenUtil tokenUtil;
     private final RedisUtil redisUtil;
-    private final JobServiceClient jobServiceClient;
-    private final CoverLetterServiceClient coverLetterServiceClient;
+    private final JobFallbackService jobFallbackService;
+    private final CoverLetterFallbackService coverLetterFallbackService;
 
     @Value("${config.isDev}")
     boolean isDev;
@@ -182,11 +184,11 @@ public class UserService {
             throw new UserExceptionHandler(UserErrorStatus._NOT_EQUAL_PASSWORD);
         }
 
-        //저장한 자소서 스크랩 삭제
-        jobServiceClient.deleteUserNoticeScraps(user.getId());
-
         //저장한 공고 스크랩 삭제
-        coverLetterServiceClient.deleteUserCoverLetterScraps(user.getId());
+        jobFallbackService.deleteUserNoticeScraps(user.getId());
+
+        //저장한 자소서 스크랩 삭제
+        coverLetterFallbackService.deleteUserCoverLetterScraps(user.getId());
 
         //사용자 삭제
         userRepository.delete(user);
@@ -212,7 +214,7 @@ public class UserService {
 
         //포인트 사용 (포인트를 사용할 수 있는지 체크)
         if (user.getPoint() < point){
-            log.warn("포인트 적립 실패");
+            log.warn("포인트 사용 실패");
             throw new GeneralException(UserErrorStatus._NOT_ENOUGH_POINT);
         }
 

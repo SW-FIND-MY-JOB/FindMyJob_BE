@@ -1,17 +1,16 @@
 package com.example.coverletterservice.domain.coverLetter.service;
 
-import com.example.coverletterservice.domain.coverLetter.client.AuthServiceClient;
 import com.example.coverletterservice.domain.coverLetter.converter.CoverLetterConverter;
 import com.example.coverletterservice.domain.coverLetter.dto.CoverLetterReqDTO;
 import com.example.coverletterservice.domain.coverLetter.dto.CoverLetterResDTO;
 import com.example.coverletterservice.domain.coverLetter.entity.CoverLetter;
 import com.example.coverletterservice.domain.coverLetter.exception.status.CoverLetterErrorStatus;
+import com.example.coverletterservice.domain.coverLetter.fallbackService.AuthFallbackService;
 import com.example.coverletterservice.domain.coverLetter.repository.CoverLetterRepository;
 import com.example.coverletterservice.domain.coverLetter.repository.CoverLetterScrapRepository;
 import com.example.coverletterservice.global.exception.GeneralException;
 import com.example.coverletterservice.global.util.TokenUtil;
 import com.example.jwtutillib.JwtUtil;
-import feign.FeignException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +30,7 @@ public class CoverLetterService {
     private final TokenUtil tokenUtil;
     private final JwtUtil jwtUtil;
     private final CoverLetterScrapRepository coverLetterScrapRepository;
-    private final AuthServiceClient authServiceClient;
+    private final AuthFallbackService authFallbackService;
 
     //자소서 저장
     @Transactional
@@ -46,11 +45,7 @@ public class CoverLetterService {
         coverLetterRepository.save(coverLetter);
 
         //유저 포인트 적립
-        try {
-            authServiceClient.addUserPoint(userId, 500);
-        } catch ( FeignException.BadRequest e){
-            throw new GeneralException(CoverLetterErrorStatus._NOT_EXIST_USER);
-        }
+        authFallbackService.addUserPoint(userId, 2000);
 
         // 저장된 자소서 ID 반환
         return CoverLetterResDTO.CoverLetterIdResDTO.builder()

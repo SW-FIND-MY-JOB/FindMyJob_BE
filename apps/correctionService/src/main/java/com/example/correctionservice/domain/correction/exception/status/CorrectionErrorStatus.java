@@ -9,8 +9,10 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public enum CorrectionErrorStatus implements BaseErrorCode {
     //400
-    _NOT_ENOUGH_POINT(HttpStatus.BAD_REQUEST, "USER4005", "포인트가 부족합니다."),
     _NOT_EXIST_COVER_LETTER(HttpStatus.BAD_REQUEST, "COVERLETTER4001", "해당 자소서 정보가 없습니다."),
+
+    //409
+    _NOT_ENOUGH_POINT(HttpStatus.CONFLICT, "USER4093", "포인트가 부족합니다."),
 
     //500
     _GPT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "GPT5001", "GPT 응답 중 에러가 발생하였습니다."),

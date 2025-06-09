@@ -18,8 +18,7 @@ public enum UserErrorStatus implements BaseErrorCode {
 
     _NOT_VERIFY_EMAIL(HttpStatus.BAD_REQUEST, "USER4004", "인증되지 않은 메일입니다."),
 
-    _NOT_ENOUGH_POINT(HttpStatus.BAD_REQUEST, "USER4005", "포인트가 부족합니다."),
-
+    _NOT_ENOUGH_POINT(HttpStatus.CONFLICT, "USER4093", "포인트가 부족합니다."),
     ;
 
     private final HttpStatus httpStatus;
