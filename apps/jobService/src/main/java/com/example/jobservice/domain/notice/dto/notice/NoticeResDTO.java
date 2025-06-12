@@ -46,7 +46,7 @@ public class NoticeResDTO {
         Long viewCnt;
 
         @Schema(description = "스크랩 유무", example = "true")
-        Boolean isScarp;
+        Boolean isScrap;
     }
 
     @Getter
@@ -113,6 +113,6 @@ public class NoticeResDTO {
         Long viewCnt;
 
         @Schema(description = "스크랩 유무", example = "true")
-        Boolean isScarp;
+        Boolean isScrap;
     }
 }
