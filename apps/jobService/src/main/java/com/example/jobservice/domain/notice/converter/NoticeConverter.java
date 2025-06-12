@@ -54,7 +54,7 @@ public class NoticeConverter {
                 .recrutPbancTtl(notice.getRecrutPbancTtl())
                 .logoUrl(notice.getAgency() != null ? notice.getAgency().getLogoUrl() : null)
                 .viewCnt(notice.getViewCnt())
-                .isScarp(isScrap)
+                .isScrap(isScrap)
                 .build();
     }
 
@@ -80,7 +80,7 @@ public class NoticeConverter {
                 .scrnprcdrMthdExpln(notice.getScrnprcdrMthdExpln())
                 .nonatchRsn(notice.getNonatchRsn())
                 .viewCnt(notice.getViewCnt())
-                .isScarp(isScrap)
+                .isScrap(isScrap)
                 .build();
     }
 }
