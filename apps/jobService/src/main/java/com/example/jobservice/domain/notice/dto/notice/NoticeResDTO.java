@@ -82,6 +82,9 @@ public class NoticeResDTO {
         @Schema(description = "근무지역", example = "서울")
         String workRgnNmLst;
 
+        @Schema(description = "학력", example = "학력무관")
+        String acbgCondNmLst;
+
         @Schema(description = "채용구분이름", example = "경력직")
         String recruitSeNm;
 
