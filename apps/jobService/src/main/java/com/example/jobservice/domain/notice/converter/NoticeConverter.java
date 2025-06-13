@@ -70,6 +70,7 @@ public class NoticeConverter {
                 .address(notice.getAgency() != null ? notice.getAgency().getAddress() : null)
                 .hireTypeNmLst(notice.getHireTypeNmLst())
                 .workRgnNmLst(notice.getWorkRgnNmLst())
+                .acbgCondNmLst(notice.getAcbgCondNmLst())
                 .recruitSeNm(notice.getRecrutSeNm())
                 .pbancEndYmd(notice.getPbancEndYmd())
                 .recrutPbancTtl(notice.getRecrutPbancTtl())
