@@ -42,6 +42,12 @@ dependencies {
 	// jwt-util
 	implementation project(':libs:jwt-util-lib')
 
+	//load balancer
+	implementation 'org.springframework.cloud:spring-cloud-starter-loadbalancer'
+
+	//eureka client
+	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+
 	// lombok
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
