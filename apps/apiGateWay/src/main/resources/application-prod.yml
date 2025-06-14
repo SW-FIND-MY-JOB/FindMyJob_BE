@@ -48,7 +48,7 @@ spring:
     gateway:
       routes:
         - id: auth-service
-          uri: http://auth:8081
+          uri: lb://auth-service
           predicates:
             - Path=/auth-service/**
           filters:
@@ -59,7 +59,7 @@ spring:
                 fallbackUri: forward:/fallback/auth
 
         - id: job-service
-          uri: http://job:8082
+          uri: lb://job-service
           predicates:
             - Path=/job-service/**
           filters:
@@ -70,7 +70,7 @@ spring:
                 fallbackUri: forward:/fallback/job
 
         - id: cover-letter-service
-          uri: http://coverletter:8083
+          uri: lb://cover-letter-service
           predicates:
             - Path=/cover-letter-service/**
           filters:
@@ -81,7 +81,7 @@ spring:
                 fallbackUri: forward:/fallback/cover-letter
 
         - id: correction-service
-          uri: http://correction:8084
+          uri: lb://correction-service
           predicates:
             - Path=/correction-service/**
           filters:
