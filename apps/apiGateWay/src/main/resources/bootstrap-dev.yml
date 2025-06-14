@@ -5,3 +5,8 @@ spring:
     config:
       uri: http://localhost:8888
       name: apigateway
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka:8761/eureka
