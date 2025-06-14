@@ -52,6 +52,18 @@ public class CoverLetterController {
         return ApiResponse.of(CoverLetterSuccessStatus._SUCCESS_GET_COVER_LETTER, coverLetterConditionInformDTOList);
     }
 
+    //내가 쓴 자소서 조회
+    @GetMapping("/my")
+    @Operation(summary = "내가 쓴 자소서 조회", description = "내가 쓴 자소서 조회하기")
+    public ApiResponse<Page<CoverLetterResDTO.CoverLetterInformDTO>> getMyCoverLetterInform(HttpServletRequest request,
+                                                                                            @RequestParam(name = "page", defaultValue = "1") int page,
+                                                                                            @RequestParam(name = "size", defaultValue = "5") int size){
+
+        Page<CoverLetterResDTO.CoverLetterInformDTO> coverLetterInformDTOList = coverLetterService.seaarchMyCoverLetters(request, page, size);
+        return ApiResponse.of(CoverLetterSuccessStatus._SUCCESS_GET_COVER_LETTER, coverLetterInformDTOList);
+    }
+
+
     //자소서 삭제
     @DeleteMapping
     @Operation(summary = "자소서 삭제", description = "자소서 삭제하기")

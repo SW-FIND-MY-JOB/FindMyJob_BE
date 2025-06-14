@@ -123,6 +123,21 @@ public class CoverLetterService {
         });
     }
 
+    //내가 쓴 자소서 조회
+    public Page<CoverLetterResDTO.CoverLetterInformDTO> seaarchMyCoverLetters(HttpServletRequest request, int page, int size){
+        //토큰 검증
+        String token = tokenUtil.checkToken(request);
+
+        //사용자 ID 추출
+        Long userId = jwtUtil.getUserId(token);
+
+        //사용자가 작성한 자소서 가져오기
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<CoverLetter> result = coverLetterRepository.findAllByUserIdOrderByCreatedAtDesc(userId, pageable);
+
+        return result.map(coverLetter->CoverLetterConverter.toCoverLetterInformDTO(coverLetter, false));
+    }
+
     //자소서 삭제
     @Transactional
     public void deleteCoverLetter(HttpServletRequest request, Long coverLetterId){
