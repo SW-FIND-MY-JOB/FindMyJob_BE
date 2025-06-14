@@ -88,7 +88,10 @@ public class NoticeResDTO {
         @Schema(description = "채용구분이름", example = "경력직")
         String recruitSeNm;
 
-        @Schema(description = "공고마감일", example = "20250111")
+        @Schema(description = "공고시작일", example = "2025-01-11")
+        LocalDate pbancBgngYmd;
+
+        @Schema(description = "공고마감일", example = "2025-01-11")
         LocalDate pbancEndYmd;
 
         @Schema(description = "공고 타이틀", example = "채용 공고 제목입니다")

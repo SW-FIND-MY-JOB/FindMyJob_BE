@@ -29,5 +29,6 @@ public interface CoverLetterRepository extends JpaRepository<CoverLetter, Long> 
             Pageable pageable
     );
 
-
+    //사용자가 작성한 자소서 조회
+    Page<CoverLetter> findAllByUserIdOrderByCreatedAtDesc(Long userId, Pageable pageable);
 }

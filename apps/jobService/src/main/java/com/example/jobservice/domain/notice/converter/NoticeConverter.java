@@ -72,6 +72,7 @@ public class NoticeConverter {
                 .workRgnNmLst(notice.getWorkRgnNmLst())
                 .acbgCondNmLst(notice.getAcbgCondNmLst())
                 .recruitSeNm(notice.getRecrutSeNm())
+                .pbancBgngYmd(notice.getPbancBgngYmd())
                 .pbancEndYmd(notice.getPbancEndYmd())
                 .recrutPbancTtl(notice.getRecrutPbancTtl())
                 .prefCondCn(notice.getPrefCondCn())
