@@ -1,9 +1,9 @@
 config:
-  health-check: ${health-check}
+  health-check: ${HEALTH_CHECK}
 
-  jwt-secret: ${jwt-secret}
+  jwt-secret: ${JWT_SECRET}
 
-  gpt-secret: ${gpt-secret}
+  gpt-secret: ${GPT_SECRET}
 
 server:
   port: ${SERVER_PORT:8084}

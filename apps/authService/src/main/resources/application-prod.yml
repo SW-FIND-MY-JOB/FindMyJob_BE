@@ -1,15 +1,17 @@
 config:
-  health-check: ${health-check}
+  health-check: ${HEALTH_CHECK}
 
-  jwt-secret: ${jwt-secret}
+  jwt-secret: ${JWT_SECRET}
 
-  redis-host: ${redis-host}
-  redis-port: ${redis-port}
+  redis-host: ${REDIS_HOST}
+  redis-port: ${REDIS_PORT}
 
-  mail-host: ${mail-host}
-  mail-port: ${mail-port}
-  mail-username: ${mail-username}
-  mail-password: ${mail-password}
+  mail-host: ${MAIL_HOST}
+  mail-port: ${MAIL_PORT}
+  mail-username: ${MAIL_USERNAME}
+  mail-password: ${MAIL_PASSWORD}
+
+
 
   isDev: false
 
@@ -33,9 +35,9 @@ management:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://mysql:3306/${mysql-db-name}?serverTimezone=Asia/Seoul
-    username: ${mysql-db-user}
-    password: ${mysql-db-password}
+    url: jdbc:mysql://mysql:3306/${MYSQL_DB_NAME}?serverTimezone=Asia/Seoul
+    username: ${MYSQL_DB_USER}
+    password: ${MYSQL_DB_PASSWORD}
 
   sql:
     init:
