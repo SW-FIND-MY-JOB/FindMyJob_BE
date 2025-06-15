@@ -123,6 +123,8 @@ services:
   correction-1:
     image: ${MY_DOCKER_ID}/correctionservice:latest
     container_name: correction-1
+    environment:
+      - INSTANCE_ID=correction-1
     depends_on:
       eureka:
         condition: service_started
@@ -136,6 +138,8 @@ services:
   correction-2:
     image: ${MY_DOCKER_ID}/correctionservice:latest
     container_name: correction-2
+    environment:
+      - INSTANCE_ID=correction-2
     depends_on:
       eureka:
         condition: service_started
@@ -173,8 +177,37 @@ services:
     networks:
       - msanet
 
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - msanet
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    networks:
+      - msanet
+
+  node-exporter:
+    image: prom/node-exporter
+    container_name: node-exporter
+    ports:
+      - "9100:9100"
+    networks:
+      - msanet
+
 volumes:
   mysql-data:
+  grafana-storage:
 
 networks:
   msanet:

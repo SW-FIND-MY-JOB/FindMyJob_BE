@@ -1,10 +1,25 @@
 server:
   port: 8761
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      show-details: always
+    prometheus:
+      enabled: true
+  metrics:
+    tags:
+      application: eureka
+
 eureka:
   client:
     register-with-eureka: false
     fetch-registry: false
+
 logging:
   level:
     com.netflix.eureka: OFF

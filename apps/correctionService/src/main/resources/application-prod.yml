@@ -8,6 +8,21 @@ config:
 server:
   port: ${server-port}
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      show-details: always
+    prometheus:
+      enabled: true
+  metrics:
+    tags:
+      application: correction
+      instance: ${INSTANCE_ID:unknown}
+
 spring:
   cloud:
     openfeign:
