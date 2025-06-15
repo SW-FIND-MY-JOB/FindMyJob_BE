@@ -1,0 +1,39 @@
+global:
+  scrape_interval: 5s
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['prometheus:9090']
+
+  - job_name: 'eureka'
+    static_configs:
+      - targets: ['eureka:8761']
+
+  - job_name: 'gateway'
+    static_configs:
+      - targets: ['apigateway:8080']
+
+  - job_name: 'auth'
+    static_configs:
+      - targets: ['auth:8081']
+
+  - job_name: 'job'
+    static_configs:
+      - targets: ['job:8082']
+
+  - job_name: 'cover-letter'
+    static_configs:
+      - targets: ['coverletter:8083']
+
+  - job_name: 'correction-1'
+    static_configs:
+      - targets: ['correction-1:8084']
+
+  - job_name: 'correction-2'
+    static_configs:
+      - targets: ['correction-2:8085']
+
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
