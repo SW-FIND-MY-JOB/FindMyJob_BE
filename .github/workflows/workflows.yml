@@ -58,7 +58,7 @@ jobs:
           password: ${{ secrets.SSH_PASSWORD }}
           port: 22
           #key: ${{ secrets.SSH_KEY }}
-          source: "docker-compose.yml,.env"
+          source: "docker-compose.yml,.env,prometheus"
           target: "/home/ubuntu/myproject"
 
       # 배포
