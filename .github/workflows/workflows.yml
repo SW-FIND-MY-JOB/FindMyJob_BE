@@ -57,8 +57,10 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASSWORD }}
           port: 22
-          source: "docker-compose.yml .env prometheus.yml"
+          source: "docker-compose.yml,.env,prometheus.yml"
           target: "/home/ubuntu/myproject"
+          overwrite: true
+          debug: true
 
       # 배포
       - name: SSH into server and deploy
