@@ -4,7 +4,7 @@ config:
   jwt-secret: ${jwt-secret}
 
 server:
-  port: ${server-port}
+  port: ${SERVER_PORT:8080}
 
 management:
   endpoints:
