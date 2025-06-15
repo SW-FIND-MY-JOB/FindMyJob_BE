@@ -4,6 +4,8 @@ import com.example.coverletterservice.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Builder
 @AllArgsConstructor
@@ -38,4 +40,7 @@ public class CoverLetter extends BaseEntity {
     //유저 id
     @Column(name = "user_id", nullable = false)
     private Long userId;
+
+    @OneToMany(mappedBy = "coverLetter", cascade = CascadeType.ALL)
+    private List<CoverLetterScrap> scraps;
 }
