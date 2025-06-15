@@ -50,14 +50,14 @@ jobs:
             docker push ${{ secrets.MY_DOCKER_ID }}/$lowercase_service:latest
           done
 
-      - name: 📦 Upload docker-compose.yml and .env to server
+      - name: 📦 Upload docker-compose.yml and .env and prometheus.yml to server
         uses: appleboy/scp-action@v0.1.3
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASSWORD }}
           port: 22
-          source: "docker-compose.yml,.env,prometheus.yml"
+          source: "docker-compose.yml .env prometheus.yml"
           target: "/home/ubuntu/myproject"
 
       # 배포
