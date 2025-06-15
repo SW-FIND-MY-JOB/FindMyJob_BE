@@ -14,7 +14,7 @@ config:
   isDev: true
 
 server:
-  port: ${server-port}
+  port: ${SERVER_PORT:8081}
 
 spring:
   datasource:

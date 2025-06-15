@@ -7,7 +7,7 @@ config:
   redis-port: ${redis-port}
 
 server:
-  port: ${server-port}
+  port: ${SERVER_PORT:8083}
 
 spring:
   datasource:

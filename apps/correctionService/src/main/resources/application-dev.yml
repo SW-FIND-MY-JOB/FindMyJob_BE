@@ -6,7 +6,7 @@ config:
   gpt-secret: ${gpt-secret}
 
 server:
-  port: ${server-port}
+  port: ${SERVER_PORT:8084}
 
 spring:
   cloud:
