@@ -6,6 +6,8 @@ config:
   redis-host: ${REDIS_HOST}
   redis-port: ${REDIS_PORT}
 
+  gpt-secret: ${GPT_SECRET}
+
 server:
   port: ${SERVER_PORT:8083}
 

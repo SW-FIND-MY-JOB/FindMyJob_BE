@@ -52,6 +52,10 @@ resilience4j:
         timeoutDuration: 120s    #타임아웃 시간 120초
         cancelRunningFuture: true
 
+      coverLetterCircuitBreaker:
+        timeoutDuration: 30s      # GPT 평균 응답
+        cancelRunningFuture: true # 타임아웃 시 스레드 중단
+
 
 spring:
   cloud:

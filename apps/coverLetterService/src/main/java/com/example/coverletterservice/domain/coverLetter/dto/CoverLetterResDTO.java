@@ -103,5 +103,8 @@ public class CoverLetterResDTO {
     public static class CoverLetterIdResDTO{
         @Schema(description = "자소서 id", example = "1")
         Long id;
+
+        @Schema(description = "자소서 적립 포인트", example = "1000")
+        Integer point;
     }
 }
