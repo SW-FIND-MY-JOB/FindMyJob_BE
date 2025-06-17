@@ -103,5 +103,30 @@ public class CoverLetterResDTO {
     public static class CoverLetterIdResDTO{
         @Schema(description = "자소서 id", example = "1")
         Long id;
+
+        @Schema(description = "자소서 적립 포인트", example = "1000")
+        Integer point;
+    }
+
+    @Getter
+    @Builder
+    public static class CoverLetterRankingResDTO{
+        @Schema(description = "자소서 id", example = "1")
+        Long id;
+
+        @Schema(description = "자소서 적립 포인트", example = "1000")
+        Integer point;
+
+        @Schema(description = "기관명", example = "한국전력")
+        String instNm;
+
+        @Schema(description = "직무", example = "보건")
+        String ncsCdNmLst;
+
+        @Schema(description = "질문", example = "지원동기 (300자 이상)")
+        String title;
+
+        @Schema(description = "작성자", example = "김땡땡")
+        String writer;
     }
 }

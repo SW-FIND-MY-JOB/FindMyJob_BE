@@ -40,6 +40,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'io.micrometer:micrometer-registry-prometheus'
 
+	//WebClient
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
 	// response
 	implementation project(':libs:response-lib')
 
