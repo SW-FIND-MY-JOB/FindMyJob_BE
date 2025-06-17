@@ -41,6 +41,14 @@ public class CoverLetter extends BaseEntity {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
+    //작성자
+    @Column(name = "writer", nullable = false)
+    private String writer;
+
+    //포인트
+    @Column(name = "point", nullable = false)
+    private Integer point;
+
     @OneToMany(mappedBy = "coverLetter", cascade = CascadeType.ALL)
     private List<CoverLetterScrap> scraps;
 }

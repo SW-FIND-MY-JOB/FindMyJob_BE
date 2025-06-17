@@ -23,6 +23,9 @@ public enum CoverLetterErrorStatus implements BaseErrorCode {
     //401
     _NOT_EQUAL_USER(HttpStatus.UNAUTHORIZED, "NOTICE4011", "스크랩한 사용자와 정보가 일치하지 않습니다."),
 
+    //409
+    _ALREADY_EXIST_COVER_LETTER(HttpStatus.CONFLICT, "COVERLETTER4091", "이미 등록된 자소서입니다."),
+
     //500
     _GPT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "GPT5001", "GPT 응답 중 에러가 발생하였습니다."),
     ;

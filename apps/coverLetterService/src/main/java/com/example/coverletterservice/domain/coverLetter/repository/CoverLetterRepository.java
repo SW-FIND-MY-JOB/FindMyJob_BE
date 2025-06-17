@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface CoverLetterRepository extends JpaRepository<CoverLetter, Long> {
@@ -28,6 +29,16 @@ public interface CoverLetterRepository extends JpaRepository<CoverLetter, Long> 
             @Param("keyword") String keyword,
             Pageable pageable
     );
+
+    //주간 Top 10 (점수 내림차순)
+    @Query(value = """
+        SELECT n FROM CoverLetter n
+        WHERE n.createdAt >= :start
+        AND n.createdAt <= :end
+        ORDER BY n.point DESC
+        LIMIT 10
+    """)
+    List<CoverLetter> findTop10InWeek(LocalDateTime start, LocalDateTime end);
 
     //사용자가 작성한 자소서 조회
     Page<CoverLetter> findAllByUserIdOrderByCreatedAtDesc(Long userId, Pageable pageable);

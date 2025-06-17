@@ -54,20 +54,23 @@ public class SecurityConfig {
                 "/job-service/api/notices/**",
 
                 //cover-letter-service
-                "/job-service/v3/api-docs/**",
-                "/job-service/swagger-ui/**",
+                "/cover-letter-service/v3/api-docs/**",
+                "/cover-letter-service/swagger-ui/**",
                 "/cover-letter-service/health/**",
 
                 //correction-service
-                "/job-service/v3/api-docs/**",
-                "/job-service/swagger-ui/**",
-                "/cover-letter-service/health/**"
+                "/correction-service/v3/api-docs/**",
+                "/correction-service/swagger-ui/**",
+                "/correction-service/health/**"
         ));
 
         matchers.add(ServerWebExchangeMatchers.pathMatchers(
                 //cover-letter-service
-                HttpMethod.GET, "/cover-letter-service/api/cover-letters/**"
+                HttpMethod.GET,
+                "/cover-letter-service/api/cover-letters/**",
+                "/cover-letter-service/api/cover-letter-rankings/**"
         ));
+
         matchers.add(ServerWebExchangeMatchers.pathMatchers(HttpMethod.OPTIONS, "/**"));
 
         ServerWebExchangeMatcher excludeLoginPaths = new OrServerWebExchangeMatcher(matchers);
@@ -109,6 +112,7 @@ public class SecurityConfig {
                         .pathMatchers("/cover-letter-service/v3/api-docs/**", "/cover-letter-service/swagger-ui/**").permitAll()
                         .pathMatchers("/cover-letter-service/health/**").permitAll()
                         .pathMatchers(HttpMethod.GET, "/cover-letter-service/api/cover-letters/**").permitAll()
+                        .pathMatchers(HttpMethod.GET, "/cover-letter-service/api/cover-letter-rankings/**").permitAll()
 
                         //correction-service 인가설정
                         .pathMatchers("/correction-service/v3/api-docs/**", "/correction-service/swagger-ui/**").permitAll()
