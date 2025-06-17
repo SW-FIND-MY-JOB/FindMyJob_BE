@@ -11,6 +11,7 @@ import com.example.coverletterservice.domain.coverLetter.repository.CoverLetterS
 import com.example.coverletterservice.global.exception.GeneralException;
 import com.example.coverletterservice.global.util.TokenUtil;
 import com.example.jwtutillib.JwtUtil;
+import com.fasterxml.jackson.core.type.TypeReference;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,8 +20,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -29,6 +32,7 @@ public class CoverLetterService {
     private final CoverLetterRepository coverLetterRepository;
     private final TokenUtil tokenUtil;
     private final JwtUtil jwtUtil;
+    private final WebClient openAiWebClient;
     private final CoverLetterScrapRepository coverLetterScrapRepository;
     private final AuthFallbackService authFallbackService;
 
@@ -41,15 +45,36 @@ public class CoverLetterService {
         //사용자 ID 추출
         Long userId = jwtUtil.getUserId(token);
 
+        //AI로 자소서 포인트 적립금 판별
+        Integer point = 0;
+        try {
+            point = coverLetterPointFromAi(coverLetterInfo.getTitle(), coverLetterInfo.getContent());
+        } catch (GeneralException e) {
+            throw new GeneralException(CoverLetterErrorStatus._GPT_ERROR);
+        }
+
+        //만약 포인트가 0이라면
+        if (point.equals(0)){
+            throw new GeneralException(CoverLetterErrorStatus._BAD_CONTENT);
+        } else if (point.equals(1)){
+            //만약 포인트가 1이라면
+            throw new GeneralException(CoverLetterErrorStatus._BAD_CONTENT2);
+        } else if (point.equals(2)){
+            //만약 포인트가 2이라면
+            throw new GeneralException(CoverLetterErrorStatus._NOT_COVER_LETTER_CONTENT);
+        }
+
+        //자소서 저장
         CoverLetter coverLetter = CoverLetterConverter.toCoverLetter(coverLetterInfo, userId);
         coverLetterRepository.save(coverLetter);
 
         //유저 포인트 적립
-        authFallbackService.addUserPoint(userId, 2000);
+        authFallbackService.addUserPoint(userId, point);
 
         // 저장된 자소서 ID 반환
         return CoverLetterResDTO.CoverLetterIdResDTO.builder()
                 .id(coverLetter.getId())
+                .point(point)
                 .build();
     }
 
@@ -140,7 +165,7 @@ public class CoverLetterService {
 
     //자소서 삭제
     @Transactional
-    public void deleteCoverLetter(HttpServletRequest request, Long coverLetterId){
+    public void deleteCoverLetter(HttpServletRequest request, Long coverLetterId) {
         //토큰 검증
         String token = tokenUtil.checkToken(request);
 
@@ -150,10 +175,66 @@ public class CoverLetterService {
         CoverLetter coverLetter = coverLetterRepository.findById(coverLetterId)
                 .orElseThrow(() -> new GeneralException(CoverLetterErrorStatus._NOT_EXIST_COVER_LETTER));
 
-        if(!userId.equals(coverLetter.getUserId())){
+        if (!userId.equals(coverLetter.getUserId())) {
             throw new GeneralException(CoverLetterErrorStatus._NOT_EQUAL_USER_COVER_LETTER);
         }
 
         coverLetterRepository.deleteById(coverLetterId);
+    }
+
+    // GPT 점수 산정 메서드
+    public Integer coverLetterPointFromAi(String title, String content) {
+        return openAiWebClient.post()
+                .uri("/chat/completions")
+                .bodyValue(createRequestBody(title, content))
+                .retrieve()
+                .bodyToMono(Map.class)
+                .map(this::extractContent)
+                .block();
+    }
+
+    /** 🔹 GPT 프롬프트 */
+    private Map<String, Object> createRequestBody(String title, String content) {
+        return Map.of(
+                "model", "gpt-4o",
+                "messages", List.of(
+                        Map.of("role", "system",
+                                "content", "너는 자기소개서 평가 전문가야. 오직 숫자(0,1,2,500,510,...2990,3000)만 반환해야 해. 2000이상의 값 부터는 매우 엄격하게 점수를 매겨줘."),
+                        Map.of("role", "user",
+                                "content", String.format("""
+                                   제목: %s
+                                   본문: %s
+                                   조건:
+                                   1) 욕설·비방·비속어 포함 시 0
+                                   2) 이상한 글자로 도배 시 1
+                                   3) 자기소개서에 맞지 않은 글 작성 시 2
+                                   4) 정상 글이면 500~3000 사이 점수를 10 단위로
+                                   5) 다른 설명 없이 숫자만 출력
+                                   """, title, content))
+                ),
+                "temperature", 0.0,
+                "max_tokens", 10,
+                "stream", false
+        );
+    }
+
+    /** 🔹 응답 파싱 */
+    @SuppressWarnings("unchecked")
+    private Integer extractContent(Map<String, Object> response) {
+        try {
+            var choices = (List<Map<String, Object>>) response.get("choices");
+            if (choices == null || choices.isEmpty()) {
+                throw new IllegalStateException("No choices in GPT response");
+            }
+            var message = (Map<String, Object>) choices.get(0).get("message");
+            var content = (String) message.get("content");
+            return Integer.valueOf(content.trim());  // " 100 " → 100
+        } catch (NumberFormatException e) {
+            log.error("GPT 응답이 숫자가 아님: {}", response);
+            throw new GeneralException(CoverLetterErrorStatus._GPT_ERROR);
+        } catch (Exception e) {
+            log.error("GPT 파싱 오류:", e);
+            throw new GeneralException(CoverLetterErrorStatus._GPT_ERROR);
+        }
     }
 }
