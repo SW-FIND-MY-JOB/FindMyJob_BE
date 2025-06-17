@@ -9,9 +9,11 @@ import java.util.List;
 public class CoverLetterConverter {
 
     //자소서 객체로 변환
-    public static CoverLetter toCoverLetter(CoverLetterReqDTO.CoverLetterInformDTO dto, Long userId){
+    public static CoverLetter toCoverLetter(CoverLetterReqDTO.CoverLetterInformDTO dto, Long userId, String writer, Integer point){
         return CoverLetter.builder()
                 .userId(userId)
+                .writer(writer)
+                .point(point)
                 .instNm(dto.getInstNm())
                 .ncsCdNmLst(dto.getNcsCdNmLst())
                 .title(dto.getTitle())
@@ -63,6 +65,18 @@ public class CoverLetterConverter {
                 .content(coverLetter.getContent())
                 .viewCnt(coverLetter.getViewCnt())
                 .isScrap(isScrap)
+                .build();
+    }
+
+    // 주간 Top 10 Dto로 변환
+    public static CoverLetterResDTO.CoverLetterRankingResDTO toCoverLetterRankingResDTO(CoverLetter coverLetter){
+        return CoverLetterResDTO.CoverLetterRankingResDTO.builder()
+                .id(coverLetter.getId())
+                .point(coverLetter.getPoint())
+                .instNm(coverLetter.getInstNm())
+                .ncsCdNmLst(coverLetter.getNcsCdNmLst())
+                .title(coverLetter.getTitle())
+                .writer(coverLetter.getWriter())
                 .build();
     }
 }

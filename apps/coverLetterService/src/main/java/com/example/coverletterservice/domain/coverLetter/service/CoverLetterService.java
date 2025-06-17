@@ -11,7 +11,6 @@ import com.example.coverletterservice.domain.coverLetter.repository.CoverLetterS
 import com.example.coverletterservice.global.exception.GeneralException;
 import com.example.coverletterservice.global.util.TokenUtil;
 import com.example.jwtutillib.JwtUtil;
-import com.fasterxml.jackson.core.type.TypeReference;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +21,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 
@@ -45,6 +47,9 @@ public class CoverLetterService {
         //사용자 ID 추출
         Long userId = jwtUtil.getUserId(token);
 
+        //사용자 이름 추출
+        String writer = jwtUtil.getName(token);
+
         //AI로 자소서 포인트 적립금 판별
         Integer point = 0;
         try {
@@ -65,13 +70,13 @@ public class CoverLetterService {
         }
 
         //자소서 저장
-        CoverLetter coverLetter = CoverLetterConverter.toCoverLetter(coverLetterInfo, userId);
+        CoverLetter coverLetter = CoverLetterConverter.toCoverLetter(coverLetterInfo, userId, writer, point);
         coverLetterRepository.save(coverLetter);
 
         //유저 포인트 적립
         authFallbackService.addUserPoint(userId, point);
 
-        // 저장된 자소서 ID 반환
+        // 저장된 자소서 정보 반환
         return CoverLetterResDTO.CoverLetterIdResDTO.builder()
                 .id(coverLetter.getId())
                 .point(point)
@@ -162,6 +167,21 @@ public class CoverLetterService {
 
         return result.map(coverLetter->CoverLetterConverter.toCoverLetterInformDTO(coverLetter, false));
     }
+
+    //주간 랭킹 Top10 조회
+    public List<CoverLetterResDTO.CoverLetterRankingResDTO> searchCoverLetterRanking(){
+        // 이번주 월요일 00:00 ~ 다음주 월요일 00:00
+        LocalDateTime thisMon = LocalDate.now(ZoneId.of("Asia/Seoul"))
+                .with(java.time.DayOfWeek.MONDAY)
+                .atStartOfDay();
+
+        LocalDateTime nextMon = thisMon.plusWeeks(1);
+
+        List<CoverLetter> coverLetterList = coverLetterRepository.findTop10InWeek(thisMon, nextMon);
+
+        return coverLetterList.stream().map(coverLetter -> CoverLetterConverter.toCoverLetterRankingResDTO(coverLetter)).toList();
+    }
+
 
     //자소서 삭제
     @Transactional
