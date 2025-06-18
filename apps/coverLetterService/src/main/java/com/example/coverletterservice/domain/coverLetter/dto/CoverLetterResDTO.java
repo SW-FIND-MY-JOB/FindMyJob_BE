@@ -91,6 +91,9 @@ public class CoverLetterResDTO {
         @Schema(description = "내용", example = "기후변화로 인해 탄소중립이 전 세계....")
         String content;
 
+        @Schema(description = "점수", example = "1000")
+        Integer score;
+
         @Schema(description = "조회수", example = "123")
         Long viewCnt;
 
@@ -104,6 +107,9 @@ public class CoverLetterResDTO {
         @Schema(description = "자소서 id", example = "1")
         Long id;
 
+        @Schema(description = "자소서 점수", example = "1000")
+        Integer score;
+
         @Schema(description = "자소서 적립 포인트", example = "1000")
         Integer point;
     }
@@ -114,8 +120,11 @@ public class CoverLetterResDTO {
         @Schema(description = "자소서 id", example = "1")
         Long id;
 
-        @Schema(description = "자소서 적립 포인트", example = "1000")
-        Integer point;
+        @Schema(description = "자소서 점수", example = "1000")
+        Integer score;
+
+        @Schema(description = "랭킹", example = "1")
+        Integer ranking;
 
         @Schema(description = "기관명", example = "한국전력")
         String instNm;

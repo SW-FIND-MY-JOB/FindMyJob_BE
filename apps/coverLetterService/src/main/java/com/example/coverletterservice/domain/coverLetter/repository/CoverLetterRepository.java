@@ -35,10 +35,9 @@ public interface CoverLetterRepository extends JpaRepository<CoverLetter, Long> 
         SELECT n FROM CoverLetter n
         WHERE n.createdAt >= :start
         AND n.createdAt <= :end
-        ORDER BY n.point DESC
-        LIMIT 10
+        ORDER BY n.score DESC
     """)
-    List<CoverLetter> findTop10InWeek(LocalDateTime start, LocalDateTime end);
+    List<CoverLetter> findTopInWeek(LocalDateTime start, LocalDateTime end);
 
     //사용자가 작성한 자소서 조회
     Page<CoverLetter> findAllByUserIdOrderByCreatedAtDesc(Long userId, Pageable pageable);

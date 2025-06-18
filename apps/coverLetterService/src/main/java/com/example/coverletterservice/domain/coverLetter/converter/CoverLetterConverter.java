@@ -9,11 +9,11 @@ import java.util.List;
 public class CoverLetterConverter {
 
     //자소서 객체로 변환
-    public static CoverLetter toCoverLetter(CoverLetterReqDTO.CoverLetterInformDTO dto, Long userId, String writer, Integer point){
+    public static CoverLetter toCoverLetter(CoverLetterReqDTO.CoverLetterInformDTO dto, Long userId, String writer, Integer score){
         return CoverLetter.builder()
                 .userId(userId)
                 .writer(writer)
-                .point(point)
+                .score(score)
                 .instNm(dto.getInstNm())
                 .ncsCdNmLst(dto.getNcsCdNmLst())
                 .title(dto.getTitle())
@@ -63,16 +63,18 @@ public class CoverLetterConverter {
                 .ncsCdNmLst(coverLetter.getNcsCdNmLst())
                 .title(coverLetter.getTitle())
                 .content(coverLetter.getContent())
+                .score(coverLetter.getScore())
                 .viewCnt(coverLetter.getViewCnt())
                 .isScrap(isScrap)
                 .build();
     }
 
     // 주간 Top 10 Dto로 변환
-    public static CoverLetterResDTO.CoverLetterRankingResDTO toCoverLetterRankingResDTO(CoverLetter coverLetter){
+    public static CoverLetterResDTO.CoverLetterRankingResDTO toCoverLetterRankingResDTO(CoverLetter coverLetter, int ranking){
         return CoverLetterResDTO.CoverLetterRankingResDTO.builder()
                 .id(coverLetter.getId())
-                .point(coverLetter.getPoint())
+                .score(coverLetter.getScore())
+                .ranking(ranking)
                 .instNm(coverLetter.getInstNm())
                 .ncsCdNmLst(coverLetter.getNcsCdNmLst())
                 .title(coverLetter.getTitle())

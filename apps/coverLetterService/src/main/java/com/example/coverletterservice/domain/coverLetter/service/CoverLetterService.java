@@ -24,8 +24,10 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 @Service
@@ -50,35 +52,50 @@ public class CoverLetterService {
         //사용자 이름 추출
         String writer = jwtUtil.getName(token);
 
-        //AI로 자소서 포인트 적립금 판별
-        Integer point = 0;
+        //AI로 자소서 점수 판별
+        Integer score = 0;
         try {
-            point = coverLetterPointFromAi(coverLetterInfo.getTitle(), coverLetterInfo.getContent());
+            score = coverLetterScoreFromAi(coverLetterInfo.getTitle(), coverLetterInfo.getContent());
         } catch (GeneralException e) {
             throw new GeneralException(CoverLetterErrorStatus._GPT_ERROR);
         }
 
-        //만약 포인트가 0이라면
-        if (point.equals(0)){
+        //만약 점수가 0이라면
+        if (score.equals(0)){
             throw new GeneralException(CoverLetterErrorStatus._BAD_CONTENT);
-        } else if (point.equals(1)){
-            //만약 포인트가 1이라면
+        } else if (score.equals(1)){
+            //만약 점수가 1이라면
             throw new GeneralException(CoverLetterErrorStatus._BAD_CONTENT2);
-        } else if (point.equals(2)){
-            //만약 포인트가 2이라면
+        } else if (score.equals(2)){
+            //만약 점수가 2이라면
             throw new GeneralException(CoverLetterErrorStatus._NOT_COVER_LETTER_CONTENT);
         }
 
         //자소서 저장
-        CoverLetter coverLetter = CoverLetterConverter.toCoverLetter(coverLetterInfo, userId, writer, point);
+        CoverLetter coverLetter = CoverLetterConverter.toCoverLetter(coverLetterInfo, userId, writer, score);
         coverLetterRepository.save(coverLetter);
 
-        //유저 포인트 적립
+        //유저 포인트 점수에 따른 포인트 적립
+        int point = 0;
+        if(score < 300){
+            point = 500;
+        } else if (score < 500){
+            point = 1000;
+        } else if (score < 800){
+            point = 1500;
+        } else if (score < 900){
+            point = 2000;
+        } else if (score < 1000){
+            point = 3000;
+        } else if (score == 1000){
+            point = 5000;
+        }
         authFallbackService.addUserPoint(userId, point);
 
         // 저장된 자소서 정보 반환
         return CoverLetterResDTO.CoverLetterIdResDTO.builder()
                 .id(coverLetter.getId())
+                .score(score)
                 .point(point)
                 .build();
     }
@@ -177,9 +194,31 @@ public class CoverLetterService {
 
         LocalDateTime nextMon = thisMon.plusWeeks(1);
 
-        List<CoverLetter> coverLetterList = coverLetterRepository.findTop10InWeek(thisMon, nextMon);
+        List<CoverLetter> coverLetterList = coverLetterRepository.findTopInWeek(thisMon, nextMon);
 
-        return coverLetterList.stream().map(coverLetter -> CoverLetterConverter.toCoverLetterRankingResDTO(coverLetter)).toList();
+        int prevScore = -1;
+        int prevRank = 0;
+        int rank = 0;
+
+        List<CoverLetterResDTO.CoverLetterRankingResDTO> rankingList = new ArrayList<>();
+        for (int i = 0; i < coverLetterList.size(); i++) {
+            CoverLetter coverLetter = coverLetterList.get(i);
+
+            // 새 점수면 랭킹 업데이트
+            if (coverLetter.getScore() != prevScore) {
+                rank = i + 1;
+                prevScore = coverLetter.getScore();
+                prevRank = rank;
+
+                //11등이면 멈추기
+                if(rank == 11){
+                    break;
+                }
+            }
+            // 동점이면 이전 랭킹 그대로
+            rankingList.add(CoverLetterConverter.toCoverLetterRankingResDTO(coverLetter, prevRank));
+        }
+        return rankingList;
     }
 
 
@@ -203,7 +242,7 @@ public class CoverLetterService {
     }
 
     // GPT 점수 산정 메서드
-    public Integer coverLetterPointFromAi(String title, String content) {
+    public Integer coverLetterScoreFromAi(String title, String content) {
         return openAiWebClient.post()
                 .uri("/chat/completions")
                 .bodyValue(createRequestBody(title, content))
@@ -219,7 +258,7 @@ public class CoverLetterService {
                 "model", "gpt-4o",
                 "messages", List.of(
                         Map.of("role", "system",
-                                "content", "너는 자기소개서 평가 전문가야. 오직 숫자(0,1,2,500,510,...2990,3000)만 반환해야 해. 2000이상의 값 부터는 매우 엄격하게 점수를 매겨줘."),
+                                "content", "너는 자기소개서 평가 전문가야. 오직 숫자(0,1,2,100,101,...999,1000)만 반환해야 해. 해당 점수를 통해 사용자의 랭킹을 매기려고 해. 최대한 중복된 값이 나오지 않도록 깐깐하게 자소서를 읽고 점수를 매겨줘."),
                         Map.of("role", "user",
                                 "content", String.format("""
                                    제목: %s
@@ -228,7 +267,7 @@ public class CoverLetterService {
                                    1) 욕설·비방·비속어 포함 시 0
                                    2) 이상한 글자로 도배 시 1
                                    3) 자기소개서에 맞지 않은 글 작성 시 2
-                                   4) 정상 글이면 500~3000 사이 점수를 10 단위로
+                                   4) 정상적인 글이면 100~1000 사이 점수를 1 단위로
                                    5) 다른 설명 없이 숫자만 출력
                                    """, title, content))
                 ),
