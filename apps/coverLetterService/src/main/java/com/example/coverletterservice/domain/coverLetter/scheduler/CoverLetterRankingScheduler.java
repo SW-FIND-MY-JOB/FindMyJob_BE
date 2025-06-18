@@ -4,7 +4,6 @@ import com.example.coverletterservice.domain.coverLetter.entity.CoverLetter;
 import com.example.coverletterservice.domain.coverLetter.fallbackService.AuthFallbackService;
 import com.example.coverletterservice.domain.coverLetter.repository.CoverLetterRepository;
 import com.example.coverletterservice.global.redis.RedisUtil;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;

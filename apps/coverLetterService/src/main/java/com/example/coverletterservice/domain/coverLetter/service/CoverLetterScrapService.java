@@ -1,6 +1,5 @@
 package com.example.coverletterservice.domain.coverLetter.service;
 
-import com.example.coverletterservice.domain.coverLetter.client.AuthServiceClient;
 import com.example.coverletterservice.domain.coverLetter.converter.CoverLetterConverter;
 import com.example.coverletterservice.domain.coverLetter.converter.CoverLetterScrapConverter;
 import com.example.coverletterservice.domain.coverLetter.dto.CoverLetterResDTO;
