@@ -45,9 +45,9 @@ public class CoverLetter extends BaseEntity {
     @Column(name = "writer", nullable = false)
     private String writer;
 
-    //포인트
-    @Column(name = "point", nullable = false)
-    private Integer point;
+    //점수
+    @Column(name = "score", nullable = false)
+    private Integer score;
 
     @OneToMany(mappedBy = "coverLetter", cascade = CascadeType.ALL)
     private List<CoverLetterScrap> scraps;

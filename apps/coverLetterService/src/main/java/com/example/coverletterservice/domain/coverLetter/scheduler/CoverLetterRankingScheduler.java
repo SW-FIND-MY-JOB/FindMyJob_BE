@@ -29,8 +29,8 @@ public class CoverLetterRankingScheduler {
             1000,  1000,  1000,  1000, 1000
     };
 
-    //매주 월요일 00시 05분에 포인트 지급
-    @Scheduled(cron = "0 5 0 ? * MON", zone = "Asia/Seoul")
+    //매주 월요일 00시 01분에 포인트 지급
+    @Scheduled(cron = "0 1 0 ? * MON", zone = "Asia/Seoul")
     public void grantWeeklyBonus() {
         // 지난주 월요일 00:00 ~ 이번주 월요일 00:00
         LocalDateTime thisMon = LocalDate.now(ZoneId.of("Asia/Seoul"))
@@ -47,30 +47,42 @@ public class CoverLetterRankingScheduler {
         }
 
         // 주간 TOP10 조회
-        List<CoverLetter> top10 = coverLetterRepository.findTop10InWeek(lastMon, thisMon);
+        List<CoverLetter> top = coverLetterRepository.findTopInWeek(lastMon, thisMon);
 
-        // 순위별 포인트 차등 지급
-        for (int i = 0; i < top10.size(); i++) {
-            int bonus = BONUS[i];
-            CoverLetter coverLetter = top10.get(i);
-            String key = "weeklyBonus"+lastMon.toLocalDate().toString()+":rank:"+i+":id:";
+        int prevScore = -1;
+        int bonusIdx = 0;    // BONUS 인덱스 (동점이면 그대로 유지)
 
-            //중복 확인
-            if(redisUtil.existData(key)){
-                if (redisUtil.getData(key).equals(coverLetter.getId().toString())){
-                    //중복된다면 넘어감
-                    continue;
+        for (int i = 0; i < top.size(); i++) {
+            CoverLetter coverLetter = top.get(i);
+
+            // 점수가 다르면 랭킹, 보너스 인덱스 갱신
+            if (coverLetter.getScore() != prevScore) {
+                bonusIdx = i;
+                prevScore = coverLetter.getScore();
+
+                // 11등이면 끝
+                if( i == 10 ){
+                    break;
                 }
             }
 
-            //포인트 적립
+            int bonus = BONUS[bonusIdx]; // 동점자도 같은 순위의 보너스
+
+            String key = "weeklyBonus" + lastMon.toLocalDate() + ":rank:" + i + ":id:";
+
+            // 중복 지급 체크
+            if (redisUtil.existData(key) && redisUtil.getData(key).equals(coverLetter.getId().toString())) {
+                continue;
+            }
+
+            // 포인트 지급
             authFallbackService.addUserPoint(coverLetter.getUserId(), bonus);
 
-            //Redis에 중복 지급 방지용 데이터 저장 (10일 뒤 파기)
+            // 지급내역 기록 (10일 뒤 삭제)
             redisUtil.setData(key, coverLetter.getId().toString(), 60L * 60 * 24 * 10);
         }
 
-        //이번주 포인트 지급 완료 플래그
+        // 지급 완료 플래그
         redisUtil.setData("last_payment_day:", lastMon.toLocalDate().toString());
     }
 }
