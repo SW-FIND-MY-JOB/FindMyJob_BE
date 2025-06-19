@@ -112,6 +112,9 @@ public class CoverLetterResDTO {
 
         @Schema(description = "자소서 적립 포인트", example = "1000")
         Integer point;
+
+        @Schema(description = "자소서 상위 몇 %", example = "50.2")
+        Double percentile;
     }
 
     @Getter
