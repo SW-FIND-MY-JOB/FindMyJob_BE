@@ -79,6 +79,7 @@ public class CoverLetterService {
         //내 자소서보다 낮은 자소서 개수
         long lowerCount = coverLetterRepository.countLowerThanScore(score);
         double percentile = ((double) lowerCount / totalCount) * 100;
+        int percentileInt = (int) Math.floor(percentile);
 
 
         //자소서 저장
@@ -107,7 +108,7 @@ public class CoverLetterService {
                 .id(coverLetter.getId())
                 .score(score)
                 .point(point)
-                .percentile(percentile)
+                .percent(percentileInt)
                 .build();
     }
 
