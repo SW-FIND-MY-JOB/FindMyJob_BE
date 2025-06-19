@@ -47,6 +47,9 @@ public interface CoverLetterRepository extends JpaRepository<CoverLetter, Long> 
     @Query("SELECT COUNT(c) FROM CoverLetter c WHERE c.score < :score")
     long countLowerThanScore(@Param("score") int score);
 
+    @Query("SELECT c.score FROM CoverLetter c")
+    List<Integer> findAllScores();
+
     //사용자가 작성한 자소서 조회
     Page<CoverLetter> findAllByUserIdOrderByCreatedAtDesc(Long userId, Pageable pageable);
 }

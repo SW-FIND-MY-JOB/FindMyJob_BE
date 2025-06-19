@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 public class CoverLetterResDTO {
     @Getter
@@ -115,6 +116,9 @@ public class CoverLetterResDTO {
 
         @Schema(description = "자소서 상위 몇 %", example = "50.2")
         Integer percent;
+
+        @Schema(description = "자소서 구간별 점수 개수")
+        Map<String, Object> scores;
     }
 
     @Getter
