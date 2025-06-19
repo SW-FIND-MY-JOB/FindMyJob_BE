@@ -71,6 +71,16 @@ public class CoverLetterService {
             throw new GeneralException(CoverLetterErrorStatus._NOT_COVER_LETTER_CONTENT);
         }
 
+        
+        //자소서 상위 몇 %인지 구하기
+        //전체 자소서 개수
+        long totalCount = 1;
+        totalCount = coverLetterRepository.countAll();
+        //내 자소서보다 낮은 자소서 개수
+        long lowerCount = coverLetterRepository.countLowerThanScore(score);
+        double percentile = ((double) lowerCount / totalCount) * 100;
+
+
         //자소서 저장
         CoverLetter coverLetter = CoverLetterConverter.toCoverLetter(coverLetterInfo, userId, writer, score);
         coverLetterRepository.save(coverLetter);
@@ -97,6 +107,7 @@ public class CoverLetterService {
                 .id(coverLetter.getId())
                 .score(score)
                 .point(point)
+                .percentile(percentile)
                 .build();
     }
 
