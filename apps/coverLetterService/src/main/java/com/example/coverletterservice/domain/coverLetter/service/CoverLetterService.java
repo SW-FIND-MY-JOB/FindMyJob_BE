@@ -24,9 +24,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
@@ -81,6 +79,27 @@ public class CoverLetterService {
         double percentile = ((double) lowerCount / totalCount) * 100;
         int percentileInt = (int) Math.floor(percentile);
 
+        //자소서 구간별 갯수
+        List<Integer> scores = coverLetterRepository.findAllScores();
+        int[] counts = new int[20]; // 20구간 (0~1000 by 50)
+
+        for (int s : scores) {
+            int index = Math.min(s / 50, 19); // 1000점은 마지막 구간(19)에 포함
+            counts[index]++;
+        }
+
+        // 구간 레이블 (ex: "0-49", "50-99", ..., "950-1000")
+        List<String> bins = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            int start = i * 50;
+            int end = (i == 19) ? 1000 : (start + 49);
+            bins.add(start + "-" + end);
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("bins", bins);
+        result.put("counts", Arrays.stream(counts).boxed().toList());
+
 
         //자소서 저장
         CoverLetter coverLetter = CoverLetterConverter.toCoverLetter(coverLetterInfo, userId, writer, score);
@@ -109,6 +128,7 @@ public class CoverLetterService {
                 .score(score)
                 .point(point)
                 .percent(percentileInt)
+                .scores(result)
                 .build();
     }
 
