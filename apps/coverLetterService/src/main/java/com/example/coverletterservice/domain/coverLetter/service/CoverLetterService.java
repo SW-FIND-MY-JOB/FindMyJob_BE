@@ -210,8 +210,8 @@ public class CoverLetterService {
                 prevScore = coverLetter.getScore();
                 prevRank = rank;
 
-                //11등이면 멈추기
-                if(rank == 11){
+                //10등 초과면 멈추기
+                if(prevRank > 10){
                     break;
                 }
             }
