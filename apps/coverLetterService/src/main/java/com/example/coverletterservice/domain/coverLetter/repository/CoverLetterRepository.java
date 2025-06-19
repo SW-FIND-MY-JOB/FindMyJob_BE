@@ -39,6 +39,14 @@ public interface CoverLetterRepository extends JpaRepository<CoverLetter, Long> 
     """)
     List<CoverLetter> findTopInWeek(LocalDateTime start, LocalDateTime end);
 
+    // 전체 자소서 개수
+    @Query("SELECT COUNT(c) FROM CoverLetter c")
+    long countAll();
+
+    // 특정 점수보다 낮은 자소서 개수
+    @Query("SELECT COUNT(c) FROM CoverLetter c WHERE c.score < :score")
+    long countLowerThanScore(@Param("score") int score);
+
     //사용자가 작성한 자소서 조회
     Page<CoverLetter> findAllByUserIdOrderByCreatedAtDesc(Long userId, Pageable pageable);
 }
