@@ -59,7 +59,7 @@ public class CoverLetterController {
                                                                                             @RequestParam(name = "page", defaultValue = "1") int page,
                                                                                             @RequestParam(name = "size", defaultValue = "5") int size){
 
-        Page<CoverLetterResDTO.CoverLetterInformDTO> coverLetterInformDTOList = coverLetterService.seaarchMyCoverLetters(request, page, size);
+        Page<CoverLetterResDTO.CoverLetterInformDTO> coverLetterInformDTOList = coverLetterService.searchMyCoverLetters(request, page, size);
         return ApiResponse.of(CoverLetterSuccessStatus._SUCCESS_GET_COVER_LETTER, coverLetterInformDTOList);
     }
 

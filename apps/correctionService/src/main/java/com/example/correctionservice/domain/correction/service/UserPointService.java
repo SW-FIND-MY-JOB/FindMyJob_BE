@@ -15,20 +15,20 @@ public class UserPointService {
     private final AuthServiceClient authServiceClient;
 
     @CircuitBreaker(name = "auth-service", fallbackMethod = "useUserPointFallback")
-    public void useUserPoint(Long userId, int point) {
+    public void useUserPoint(Long userId, int point, String description) {
         log.info("사용자 포인트 사용 요청: {}", userId);
-        authServiceClient.useUserPoint(userId, point); // FeignClient 호출
+        authServiceClient.useUserPoint(userId, point, description); // FeignClient 호출
     }
 
     // fallback 메서드
-    public void useUserPointFallback(Long userId, int point, Throwable t) {
+    public void useUserPointFallback(Long userId, int point, String description, Throwable t) {
         log.error("Circuit breaker fallback (useUserPointFallback) 작동! 원인: {}", t.getMessage());
         throw new GeneralException(ErrorStatus._AUTH_SERVICE_UNAVAILABLE);
     }
 
     @CircuitBreaker(name = "auth-service", fallbackMethod = "enoughUserPointFallback")
     public boolean enoughUserPoint(Long userId, int point) {
-        log.info("사용자 포인트 사용 요청: {}", userId);
+        log.info("사용자 포인트 사용 가능 여부 확인 요청: {}", userId);
         return authServiceClient.enoughUserPoint(userId, point); // FeignClient 호출
     }
 

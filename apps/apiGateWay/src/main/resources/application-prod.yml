@@ -53,6 +53,10 @@ resilience4j:
 
   timelimiter:
     instances:
+      authCircuitBreaker:
+        timeoutDuration: 30s    #타임아웃 시간 30초
+        cancelRunningFuture: true
+
       correctionCircuitBreaker:
         timeoutDuration: 120s    #타임아웃 시간 120초
         cancelRunningFuture: true
