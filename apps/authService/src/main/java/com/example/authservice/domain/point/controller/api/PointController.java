@@ -29,6 +29,7 @@ public class PointController {
     public ApiResponse<Page<PointResDTO.pointInformDTO>> getPointHistory(HttpServletRequest request,
                                                                          @RequestParam(name = "page", defaultValue = "1") int page,
                                                                          @RequestParam(name = "size", defaultValue = "5") int size){
+
         Page<PointResDTO.pointInformDTO> pointInformDTOList = pointService.findAllByUser(request,page,size);
         return ApiResponse.of(PointSuccessStatus._SUCCESS_GET_USER_POINT, pointInformDTOList);
     }
