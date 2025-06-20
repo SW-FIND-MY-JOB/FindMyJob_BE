@@ -25,12 +25,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CorrectionService {
     private final TokenUtil tokenUtil;
-//    private final UserPointService userPointService;
-    private final CoverLetterServiceClient coverLetterServiceClient;
-//    private final CoverLetterService coverLetterService;
     private final WebClient openAiWebClient;
     private final ObjectMapper objectMapper;
-
     private final AuthFallbackService authFallbackService;
     private final CoverLetterFallbackService coverLetterFallbackService;
 
@@ -67,7 +63,7 @@ public class CorrectionService {
         log.info("GPT 응답 성공!");
 
         //포인트 사용
-        authFallbackService.useUserPoint(userId, 300);
+        authFallbackService.useUserPoint(userId, 300, "AI 자소서 코칭 사용");
         return feedbackResDTOList;
     }
 

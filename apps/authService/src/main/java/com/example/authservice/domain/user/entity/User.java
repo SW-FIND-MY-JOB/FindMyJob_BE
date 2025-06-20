@@ -1,8 +1,11 @@
 package com.example.authservice.domain.user.entity;
 
 import com.example.authservice.domain.common.BaseEntity;
+import com.example.authservice.domain.point.entity.Point;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -31,5 +34,7 @@ public class User extends BaseEntity {
     @Column(name = "role", nullable = false)
     private String role;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Point> points;
 }
 

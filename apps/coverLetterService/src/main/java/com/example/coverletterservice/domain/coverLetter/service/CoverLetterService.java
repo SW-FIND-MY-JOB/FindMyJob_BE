@@ -120,7 +120,7 @@ public class CoverLetterService {
         } else if (score == 1000){
             point = 5000;
         }
-        authFallbackService.addUserPoint(userId, point);
+        authFallbackService.addUserPoint(userId, point, "자소서 작성 포인트 적립");
 
         // 저장된 자소서 정보 반환
         return CoverLetterResDTO.CoverLetterIdResDTO.builder()
@@ -203,7 +203,7 @@ public class CoverLetterService {
     }
 
     //내가 쓴 자소서 조회
-    public Page<CoverLetterResDTO.CoverLetterInformDTO> seaarchMyCoverLetters(HttpServletRequest request, int page, int size){
+    public Page<CoverLetterResDTO.CoverLetterInformDTO> searchMyCoverLetters(HttpServletRequest request, int page, int size){
         //토큰 검증
         String token = tokenUtil.checkToken(request);
 

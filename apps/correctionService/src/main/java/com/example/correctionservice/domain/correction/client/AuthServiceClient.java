@@ -1,5 +1,6 @@
 package com.example.correctionservice.domain.correction.client;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
@@ -17,7 +18,8 @@ public interface AuthServiceClient {
     //포인트 사용
     @PutMapping("/{userId}/use-point")
     void useUserPoint(@PathVariable @NotNull Long userId,
-                        @RequestParam @NotNull int point);
+                        @RequestParam @NotNull int point,
+                        @RequestParam @NotBlank String description);
 
     //포인트 사용 가능한지 조회
     @GetMapping("/{userId}/enough-point")

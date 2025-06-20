@@ -17,13 +17,13 @@ public class AuthFallbackService {
     private final AuthServiceClient authServiceClient;
 
     @CircuitBreaker(name = "auth-service", fallbackMethod = "useUserPointFallback")
-    public void useUserPoint(Long userId, int point) {
+    public void useUserPoint(Long userId, int point, String description) {
         log.info("사용자 포인트 사용 요청");
-        authServiceClient.useUserPoint(userId, point); // FeignClient 호출
+        authServiceClient.useUserPoint(userId, point, description); // FeignClient 호출
     }
 
     // fallback 메서드
-    public void useUserPointFallback(Long userId, int point, Throwable t) {
+    public void useUserPointFallback(Long userId, int point, String description, Throwable t) {
         Throwable cause = t.getCause();
 
         if (cause == null) {

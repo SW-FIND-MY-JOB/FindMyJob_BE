@@ -17,12 +17,12 @@ public class AuthFallbackService {
     private  final AuthServiceClient authServiceClient;
 
     @CircuitBreaker(name = "auth-service", fallbackMethod = "addUserPointFallback")
-    public void addUserPoint(@PathVariable Long userId, @PathVariable int point){
+    public void addUserPoint(Long userId, int point, String description){
         log.info("[사용자 포인트 적립 요청]");
-        authServiceClient.addUserPoint(userId, point);
+        authServiceClient.addUserPoint(userId, point, description);
     }
 
-    public void addUserPointFallback(Long userId, int point, Throwable t){
+    public void addUserPointFallback(Long userId, int point, String description, Throwable t){
         Throwable cause = t.getCause();
 
         if (cause == null) {

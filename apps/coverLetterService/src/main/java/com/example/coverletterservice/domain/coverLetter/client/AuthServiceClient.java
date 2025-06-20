@@ -1,4 +1,5 @@
 package com.example.coverletterservice.domain.coverLetter.client;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,5 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface AuthServiceClient {
     //포인트 적립
     @PutMapping("/{userId}/add-point")
-    void addUserPoint (@PathVariable Long userId, @RequestParam(defaultValue = "500") int point);
+    void addUserPoint (@PathVariable Long userId,
+                       @RequestParam(defaultValue = "500") int point,
+                       @RequestParam @NotBlank String description);
 }
