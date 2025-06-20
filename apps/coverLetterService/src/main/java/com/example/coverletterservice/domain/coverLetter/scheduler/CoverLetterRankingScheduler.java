@@ -50,17 +50,19 @@ public class CoverLetterRankingScheduler {
 
         int prevScore = -1;
         int bonusIdx = 0;    // BONUS 인덱스 (동점이면 그대로 유지)
+        int rank = 0; // 순위 기준
 
         for (int i = 0; i < top.size(); i++) {
             CoverLetter coverLetter = top.get(i);
 
             // 점수가 다르면 랭킹, 보너스 인덱스 갱신
             if (coverLetter.getScore() != prevScore) {
-                bonusIdx = i;
+                rank = i + 1;           // 새로운 점수 등장 → 새로운 순위
+                bonusIdx = i;           // 해당 보너스 인덱스도 갱신
                 prevScore = coverLetter.getScore();
 
                 // 11등이면 끝
-                if( i == 10 ){
+                if( rank > 10 ){
                     break;
                 }
             }
@@ -75,7 +77,7 @@ public class CoverLetterRankingScheduler {
             }
 
             // 포인트 지급
-            authFallbackService.addUserPoint(coverLetter.getUserId(), bonus);
+            authFallbackService.addUserPoint(coverLetter.getUserId(), bonus, "주간 TOP " + rank + " 리워드 적립");
 
             // 지급내역 기록 (10일 뒤 삭제)
             redisUtil.setData(key, coverLetter.getId().toString(), 60L * 60 * 24 * 10);

@@ -1,5 +1,7 @@
 package com.example.authservice.domain.user.service;
 
+import com.example.authservice.domain.point.entity.Point;
+import com.example.authservice.domain.point.service.PointService;
 import com.example.authservice.domain.user.client.CoverLetterServiceClient;
 import com.example.authservice.domain.user.client.JobServiceClient;
 import com.example.authservice.domain.user.converter.UserConverter;
@@ -31,6 +33,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PointService pointService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final JwtUtil jwtUtil;
     private final TokenUtil tokenUtil;
@@ -196,7 +199,7 @@ public class UserService {
 
     // 사용자 포인트 적립
     @Transactional
-    public void addUserPoint(Long userId, Integer point){
+    public void addUserPoint(Long userId, Integer point, String description){
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserExceptionHandler(UserErrorStatus._NOT_EXIST_USER));
 
@@ -204,11 +207,15 @@ public class UserService {
         user.setPoint(user.getPoint() + point);
         userRepository.save(user);
         log.info("포인트 적립 성공");
+
+        //포인트 내역 저장
+        pointService.updatePoint(true, point, user.getPoint(), description, user);
+        log.info("포인트 내역 저장 성공");
     }
 
     // 사용자 포인트 사용
     @Transactional
-    public void subUserPoint(Long userId, Integer point){
+    public void subUserPoint(Long userId, Integer point, String description){
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserExceptionHandler(UserErrorStatus._NOT_EXIST_USER));
 
@@ -221,6 +228,10 @@ public class UserService {
         user.setPoint(user.getPoint() - point);
         userRepository.save(user);
         log.info("포인트 사용 성공");
+
+        //포인트 내역 저장
+        pointService.updatePoint(false, -point, user.getPoint(), description, user);
+        log.info("포인트 내역 저장 성공");
     }
 
     // 사용자 포인트 사용 가능 조회

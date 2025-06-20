@@ -1,6 +1,7 @@
 package com.example.authservice.domain.user.controller.internal;
 
 import com.example.authservice.domain.user.service.UserService;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,16 +16,18 @@ public class InternalUserController {
     //포인트 적립
     @PutMapping("/{userId}/add-point")
     public ResponseEntity<Void> addUserPoint(@PathVariable @NotNull Long userId,
-                                             @RequestParam @NotNull int point){
-        userService.addUserPoint(userId, point);
+                                             @RequestParam @NotNull int point,
+                                             @RequestParam @NotBlank String description){
+        userService.addUserPoint(userId, point, description);
         return ResponseEntity.ok().build();
     }
 
     //포인트 사용
     @PutMapping("/{userId}/use-point")
     public ResponseEntity<Void> useUserPoint(@PathVariable @NotNull Long userId,
-                                             @RequestParam @NotNull int point){
-        userService.subUserPoint(userId, point);
+                                             @RequestParam @NotNull int point,
+                                             @RequestParam @NotBlank String description){
+        userService.subUserPoint(userId, point, description);
         return ResponseEntity.ok().build();
     }
     
