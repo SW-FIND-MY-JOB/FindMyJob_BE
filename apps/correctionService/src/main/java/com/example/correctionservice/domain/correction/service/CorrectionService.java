@@ -54,6 +54,7 @@ public class CorrectionService {
         String myContent = correctionReqInform.getContent();
 
         List<CorrectionResDTO.FeedbackResDTO> feedbackResDTOList = null;
+
         try {
             feedbackResDTOList = correctionFromAi(otherContent, myTitle, myContent);
         } catch ( FeignException e){

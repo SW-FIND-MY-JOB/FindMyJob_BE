@@ -52,7 +52,9 @@ jobs:
         if: steps.changes.outputs.changed_dirs != ''
         run: |
           IFS=$'\n'
-          for service in ${{ steps.changes.outputs.changed_dirs }}; do
+          changed_dirs="${{ steps.changes.outputs.changed_dirs }}"
+          
+          for service in $changed_dirs; do
             lowercase_service=$(echo "$service" | tr '[:upper:]' '[:lower:]')
             
             echo "🐳 Building Docker image for $service"
