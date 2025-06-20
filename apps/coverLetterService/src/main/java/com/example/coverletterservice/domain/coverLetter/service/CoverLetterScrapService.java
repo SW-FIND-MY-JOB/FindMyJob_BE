@@ -55,6 +55,7 @@ public class CoverLetterScrapService {
         Long userId = jwtUtil.getUserId(token);
 
         List<CoverLetterScrap> result = coverLetterScrapRepository.findAllByUserIdOrderByCreatedAtDesc(userId);
+
         return result.stream()
                 .map(coverLetterScrap -> CoverLetterConverter.toCoverLetterInformDTO(coverLetterScrap.getCoverLetter(), true))
                 .toList();
