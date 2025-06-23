@@ -33,6 +33,8 @@ services:
   eureka:
     image: ${MY_DOCKER_ID}/eurekaserver:latest
     container_name: eureka
+    environment:
+      - TZ=Asia/Seoul
     ports:
       - "8761:8761"
     networks:
@@ -41,6 +43,8 @@ services:
   config:
     image: ${MY_DOCKER_ID}/configserver:latest
     container_name: config
+    environment:
+      - TZ=Asia/Seoul
     ports:
       - "8888:8888"
     networks:
@@ -54,6 +58,8 @@ services:
   gateway:
     image: ${MY_DOCKER_ID}/apigateway:latest
     container_name: apigateway
+    environment:
+      - TZ=Asia/Seoul
     depends_on:
       eureka:
         condition: service_started
@@ -72,6 +78,8 @@ services:
   auth:
     image: ${MY_DOCKER_ID}/authservice:latest
     container_name: auth
+    environment:
+      - TZ=Asia/Seoul
     depends_on:
       mysql:
         condition: service_healthy
@@ -89,6 +97,8 @@ services:
   job:
     image: ${MY_DOCKER_ID}/jobservice:latest
     container_name: job
+    environment:
+      - TZ=Asia/Seoul
     depends_on:
       mysql:
         condition: service_healthy
@@ -106,6 +116,8 @@ services:
   cover-letter:
     image: ${MY_DOCKER_ID}/coverletterservice:latest
     container_name: coverletter
+    environment:
+      - TZ=Asia/Seoul
     depends_on:
       mysql:
         condition: service_healthy
@@ -125,6 +137,7 @@ services:
     container_name: correction-1
     environment:
       - INSTANCE_ID=correction-1
+      - TZ=Asia/Seoul
     depends_on:
       eureka:
         condition: service_started
@@ -140,6 +153,7 @@ services:
     container_name: correction-2
     environment:
       - INSTANCE_ID=correction-2
+      - TZ=Asia/Seoul
     depends_on:
       eureka:
         condition: service_started
@@ -212,3 +226,4 @@ volumes:
 networks:
   msanet:
     driver: bridge
+
