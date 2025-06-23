@@ -59,11 +59,10 @@ public class UserService {
 
         //사용자 생성
         User user = UserConverter.toUser(joinDTO, bCryptPasswordEncoder.encode(joinDTO.getPassword()));
+        userRepository.save(user);
 
         //포인트 내역 생성
         addUserPoint(user.getId(), 1000, "회원가입 축하 적립금");
-
-        userRepository.save(user);
     }
 
     // 로그인
