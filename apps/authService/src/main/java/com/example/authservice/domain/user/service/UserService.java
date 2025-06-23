@@ -1,9 +1,6 @@
 package com.example.authservice.domain.user.service;
 
-import com.example.authservice.domain.point.entity.Point;
 import com.example.authservice.domain.point.service.PointService;
-import com.example.authservice.domain.user.client.CoverLetterServiceClient;
-import com.example.authservice.domain.user.client.JobServiceClient;
 import com.example.authservice.domain.user.converter.UserConverter;
 import com.example.authservice.domain.user.dto.UserReqDTO;
 import com.example.authservice.domain.user.dto.UserResDTO;
