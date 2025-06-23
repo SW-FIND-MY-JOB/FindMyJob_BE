@@ -9,7 +9,7 @@ public class UserConverter {
                 .name(joinDTO.getName())
                 .email(joinDTO.getEmail())
                 .password(password)
-                .point(1000)
+                .point(0)
                 .role("USER")
                 .build();
 
