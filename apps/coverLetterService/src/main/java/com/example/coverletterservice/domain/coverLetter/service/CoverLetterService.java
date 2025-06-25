@@ -74,9 +74,9 @@ public class CoverLetterService {
         //전체 자소서 개수
         long totalCount = 1;
         totalCount = coverLetterRepository.countAll();
-        //내 자소서보다 낮은 자소서 개수
-        long lowerCount = coverLetterRepository.countLowerThanScore(score);
-        double percentile = ((double) lowerCount / totalCount) * 100;
+        //내 자소서보다 높은 자소서 개수
+        long upperCount = coverLetterRepository.countUpperThanScore(score);
+        double percentile = ((double) upperCount / totalCount) * 100;
         int percentileInt = (int) Math.floor(percentile);
 
         //자소서 구간별 갯수
